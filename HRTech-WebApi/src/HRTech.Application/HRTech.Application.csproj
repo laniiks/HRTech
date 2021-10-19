@@ -4,4 +4,19 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="10.1.1" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\HRTech.Domain\HRTech.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore.Identity, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
+        <HintPath>C:\Users\User\.dotnet\shared\Microsoft.AspNetCore.App\5.0.11\Microsoft.AspNetCore.Identity.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
