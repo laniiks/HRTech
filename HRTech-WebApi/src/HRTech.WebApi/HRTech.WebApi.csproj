@@ -14,10 +14,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\HRTech.Application\HRTech.Application.csproj" />
       <ProjectReference Include="..\HRTech.Infrastructure\HRTech.Infrastructure.csproj" />
     </ItemGroup>
