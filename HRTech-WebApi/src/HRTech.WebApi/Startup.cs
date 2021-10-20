@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using HRTech.Application.Abstractions;
 using HRTech.Application.Mapping;
 using HRTech.Application.Services.User.Implementations;
 using HRTech.Application.Services.User.Interfaces;
 using HRTech.Domain;
 using HRTech.Infrastructure.DataAccess;
+using HRTech.Infrastructure.DataAccess.Repositories;
 using HRTech.WebApi.Mapping;
 using HRTech.WebApi.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -78,7 +80,12 @@ namespace HRTech.WebApi
             DatabaseContextInstaller.ConfigureDbContext(services);
 
             services.AddSingleton<IMapper>(new Mapper(GetMapperConfiguration()))
-                .AddTransient<IUserService, UserService>();
+                //Services
+                .AddTransient<IUserService, UserService>()
+                
+                //Repositories
+                .AddTransient<IRepository<Company>, BaseRepository<Company>>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
