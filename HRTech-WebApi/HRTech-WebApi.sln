@@ -10,6 +10,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRTech.Infrastructure", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRTech.WebApi", "src\HRTech.WebApi\HRTech.WebApi.csproj", "{5ECD0A00-F78C-4E20-8C84-F8C6AE61C0E2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{0477A8DC-D613-438B-847E-4ED493D4550D}"
+ProjectSection(SolutionItems) = preProject
+	misc\docker-compose.yml = misc\docker-compose.yml
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
