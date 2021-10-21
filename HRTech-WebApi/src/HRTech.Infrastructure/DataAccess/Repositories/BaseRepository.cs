@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using HRTech.Application.Abstractions;
@@ -20,6 +21,11 @@ namespace HRTech.Infrastructure.DataAccess.Repositories
         public async Task<T> GetById(int id, CancellationToken cancellationToken)
         {
             return await _entity.FindAsync(id, cancellationToken);
+        }
+        
+        public async Task<T> GetByIdGuid(Guid id)
+        {
+            return await _entity.FindAsync(id);
         }
 
         public async Task<ICollection<T>> GetAll(CancellationToken cancellationToken)

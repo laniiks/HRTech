@@ -15,6 +15,8 @@ ProjectSection(SolutionItems) = preProject
 	misc\docker-compose.yml = misc\docker-compose.yml
 EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "src\Common\Common.csproj", "{650C88D2-A788-4193-9B29-4636115F0122}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,7 @@ Global
 		{E3F3D01E-563A-4238-AB49-56DE2EFB8FAE} = {64C2C2E0-9513-4D51-85BB-502E1D17B14A}
 		{774F2C45-C3B0-4C58-8277-543E02A13B99} = {64C2C2E0-9513-4D51-85BB-502E1D17B14A}
 		{5ECD0A00-F78C-4E20-8C84-F8C6AE61C0E2} = {64C2C2E0-9513-4D51-85BB-502E1D17B14A}
+		{650C88D2-A788-4193-9B29-4636115F0122} = {64C2C2E0-9513-4D51-85BB-502E1D17B14A}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{AEA280E9-6857-46EA-A2F1-7DE5C5371AB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -43,5 +46,9 @@ Global
 		{5ECD0A00-F78C-4E20-8C84-F8C6AE61C0E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5ECD0A00-F78C-4E20-8C84-F8C6AE61C0E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5ECD0A00-F78C-4E20-8C84-F8C6AE61C0E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{650C88D2-A788-4193-9B29-4636115F0122}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{650C88D2-A788-4193-9B29-4636115F0122}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{650C88D2-A788-4193-9B29-4636115F0122}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{650C88D2-A788-4193-9B29-4636115F0122}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

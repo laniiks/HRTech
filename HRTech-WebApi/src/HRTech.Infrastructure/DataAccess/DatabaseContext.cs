@@ -9,7 +9,7 @@ namespace HRTech.Infrastructure.DataAccess
 {
     public class DatabaseContext : IdentityDbContext<ApplicationUser>
     {
-
+        public DbSet<Company> Companies { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var config = new ConfigurationBuilder()
