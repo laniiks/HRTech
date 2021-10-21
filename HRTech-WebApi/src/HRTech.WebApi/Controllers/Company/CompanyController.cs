@@ -76,5 +76,13 @@ namespace HRTech.WebApi.Controllers.Company
 
         }
 
+        [HttpGet("GetAllCompany")]
+        public async Task<IActionResult> GetAllCompany(CancellationToken cancellationToken)
+        {
+            var result = await _companyService.GetAllCompany(cancellationToken);
+            return Ok(result);
+        }
+
+
     }
 }

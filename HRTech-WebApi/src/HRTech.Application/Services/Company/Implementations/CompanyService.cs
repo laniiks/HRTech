@@ -17,17 +17,18 @@ namespace HRTech.Application.Services.Company.Implementations
 {
     public class CompanyService : ICompanyService
     {
-        private readonly IRepository<Domain.Company> _companyRepository;
+        private readonly ICompanyRepository _companyRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
         public CompanyService(
-            IRepository<Domain.Company> companyRepository, 
+            ICompanyRepository companyRepository, 
             UserManager<ApplicationUser> userManager, 
             IUserService userService, 
-            ILogger<CompanyService> logger, IMapper mapper)
+            ILogger<CompanyService> logger, 
+            IMapper mapper)
         {
             _companyRepository = companyRepository;
             _userManager = userManager;
@@ -120,6 +121,32 @@ namespace HRTech.Application.Services.Company.Implementations
                 _logger.LogError(e, "Произошла ошибка при получении компании");
                 throw new Exception( "Произошла ошибка при получении компании", e);
             }
+        }
+
+        public async Task<GetAll.Response> GetAllCompany(CancellationToken cancellationToken)
+        {
+            var company = await _companyRepository.GetAll(cancellationToken);
+
+            return new GetAll.Response
+            {
+                Companies = company.Select(com => new Get.Response
+                {
+                    Id = com.Id,
+                    CompanyName = com.CompanyName,
+                    Employees = com.Employees != null
+                        ? com.Employees.Select(x => new Get.Response.Employee()
+                        {
+                            Id = x.Id,
+                            FirstName = x.FirstName,
+                            LastName = x.LastName,
+                            Patronymic = x.Patronymic,
+                            PhoneNumber = x.PhoneNumber,
+                            UserName = x.UserName
+                        }).ToList()
+                        : new List<Get.Response.Employee>(),
+                    CountEmployee = com.Employees?.Count() ?? 0
+                })
+            };
         }
 
         public async Task<Edit.Response> EditCompany(Edit.Request request, CancellationToken cancellationToken)

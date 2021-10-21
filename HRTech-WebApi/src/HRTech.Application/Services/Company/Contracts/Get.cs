@@ -24,6 +24,7 @@ namespace HRTech.Application.Services.Company.Contracts
                 public string UserName { get; set; }
             }
             public ICollection<Employee> Employees { get; set; }
+            public int CountEmployee { get; set; }
         }
     }
 

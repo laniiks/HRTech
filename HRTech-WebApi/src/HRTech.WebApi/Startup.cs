@@ -81,7 +81,7 @@ namespace HRTech.WebApi
                 .AddTransient<ICompanyService, CompanyService>()
                 
                 //Repositories
-                .AddTransient<IRepository<Company>, BaseRepository<Company>>();
+                .AddTransient<ICompanyRepository, CompanyRepository>();
             
         }
 
