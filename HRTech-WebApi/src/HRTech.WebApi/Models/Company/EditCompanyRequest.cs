@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Http;
 
 namespace HRTech.WebApi.Models.Company
 {
@@ -6,5 +7,6 @@ namespace HRTech.WebApi.Models.Company
     {
         public Guid id { get; set; }
         public string CompanyName { get; set; }
+        public IFormFile File { get; set; }
     }
 }

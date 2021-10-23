@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using HRTech.Application.Services.Company.Contracts;
 using HRTech.Application.Services.Company.Interfaces;
 using HRTech.WebApi.Models.Company;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HRTech.WebApi.Controllers.Company
@@ -20,15 +22,36 @@ namespace HRTech.WebApi.Controllers.Company
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateNewCompany(CreateCompanyRequest request,
+        public async Task<IActionResult> CreateNewCompany([FromForm]CreateCompanyRequest request,
             CancellationToken cancellationToken)
         {
             Create.Response response;
+            string fileName = null;
+            string fileExtension = null;
+            var target = new MemoryStream();
             try
             {
+                if (request.File is {Length: > 0})
+                {
+                    fileName = request.File.FileName;
+                    fileExtension = Path.GetExtension(fileName);
+                    await using (target)
+                    {
+                        target.Position = 0;
+                        await request.File.CopyToAsync(target, cancellationToken);
+                    }
+                }
+
                 response = await _companyService.Create(new Create.Request
                 {
-                    CompanyName = request.CompanyName
+                    CompanyName = request.CompanyName,
+                    Logo = request.File is {Length: > 0} ? new Create.Request.LogoCompany
+                    {
+                        FileGuid = Guid.NewGuid(),
+                        FileName = fileName,
+                        FileType = fileExtension,
+                        Content = target.ToArray()
+                    } : new Create.Request.LogoCompany()
                 }, cancellationToken);
             }
             catch (Exception e)
@@ -56,16 +79,40 @@ namespace HRTech.WebApi.Controllers.Company
         }
 
         [HttpPut]
-        public async Task<IActionResult> EditCompeny(EditCompanyRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> EditCompany([FromForm]EditCompanyRequest request, CancellationToken cancellationToken)
         {
             Edit.Response response;
             try
             {
-                response = await _companyService.EditCompany(new Edit.Request
+                if (request.File is {Length: > 0})
                 {
-                    id = request.id,
-                    CompanyName = request.CompanyName
-                }, cancellationToken);
+                    var fileName = request.File.FileName;
+                    var fileExtension = Path.GetExtension(fileName);
+                    await using var target = new MemoryStream();
+                    target.Position = 0;
+                    await request.File.CopyToAsync(target, cancellationToken);
+                    response = await _companyService.EditCompany(new Edit.Request
+                    {
+                        id = request.id,
+                        CompanyName = request.CompanyName,
+                        Logo =  new Edit.Request.LogoCompany
+                        {
+                            FileGuid = Guid.NewGuid(),
+                            FileName = fileName,
+                            FileType = fileExtension,
+                            Content = target.ToArray()
+                        }
+                    }, cancellationToken);
+                }
+                else
+                {
+                    response = await _companyService.EditCompany(new Edit.Request
+                    {
+                        id = request.id,
+                        CompanyName = request.CompanyName
+                    }, cancellationToken);
+                }
+                
             }
             catch (Exception e)
             {

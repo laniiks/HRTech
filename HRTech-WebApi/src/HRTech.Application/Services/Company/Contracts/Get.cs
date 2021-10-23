@@ -25,6 +25,15 @@ namespace HRTech.Application.Services.Company.Contracts
             }
             public ICollection<Employee> Employees { get; set; }
             public int CountEmployee { get; set; }
+            
+            public sealed class LogoCompany
+            {
+                public Guid FileGuid { get; set; }
+                public byte[] Content { get; set; }
+                public string FileName { get; set; }
+            }
+            
+            public LogoCompany Logo { get; set; }
         }
     }
 

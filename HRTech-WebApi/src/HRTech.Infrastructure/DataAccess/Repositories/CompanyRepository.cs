@@ -20,6 +20,7 @@ namespace HRTech.Infrastructure.DataAccess.Repositories
             return await _databaseContext.Companies
                 .OrderByDescending(d => d.CreatedDateTime)
                 .Include(x=>x.Employees)
+                .Include(x=>x.Image)
                 .Where(x=>x.State == state)
                 .ToArrayAsync(cancellationToken);
         }

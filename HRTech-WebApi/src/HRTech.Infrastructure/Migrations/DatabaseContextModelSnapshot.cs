@@ -118,6 +118,38 @@ namespace HRTech.Infrastructure.Migrations
                     b.ToTable("Companies");
                 });
 
+            modelBuilder.Entity("HRTech.Domain.Image", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<byte[]>("Content")
+                        .HasColumnType("longblob");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("FileGuid")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("FileType")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId")
+                        .IsUnique();
+
+                    b.ToTable("Images");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -257,6 +289,17 @@ namespace HRTech.Infrastructure.Migrations
                     b.Navigation("Company");
                 });
 
+            modelBuilder.Entity("HRTech.Domain.Image", b =>
+                {
+                    b.HasOne("HRTech.Domain.Company", "Company")
+                        .WithOne("Image")
+                        .HasForeignKey("HRTech.Domain.Image", "CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -311,6 +354,8 @@ namespace HRTech.Infrastructure.Migrations
             modelBuilder.Entity("HRTech.Domain.Company", b =>
                 {
                     b.Navigation("Employees");
+
+                    b.Navigation("Image");
                 });
 #pragma warning restore 612, 618
         }

@@ -18,6 +18,7 @@ namespace HRTech.Application.Services.Company.Implementations
     public class CompanyService : ICompanyService
     {
         private readonly ICompanyRepository _companyRepository;
+        private readonly IRepository<Domain.Image> _imageRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
@@ -28,25 +29,38 @@ namespace HRTech.Application.Services.Company.Implementations
             UserManager<ApplicationUser> userManager, 
             IUserService userService, 
             ILogger<CompanyService> logger, 
-            IMapper mapper)
+            IMapper mapper, 
+            IRepository<Domain.Image> imageRepository)
         {
             _companyRepository = companyRepository;
             _userManager = userManager;
             _userService = userService;
             _logger = logger;
             _mapper = mapper;
+            _imageRepository = imageRepository;
         }
 
         public async Task<Create.Response> Create(Create.Request request, CancellationToken cancellationToken)
         {
             try
             {
-                var company = new Domain.Company
+                Domain.Company company = null;
+                company = new Domain.Company
                 {
                     CompanyName = request.CompanyName,
                     State = CompanyState.New,
-                    CreatedDateTime = DateTime.UtcNow
+                    CreatedDateTime = DateTime.UtcNow,
+                    Image = request.Logo != null
+                        ? new Domain.Image()
+                        {
+                            FileGuid = request.Logo.FileGuid,
+                            FileName = request.Logo.FileName,
+                            FileType = request.Logo.FileType,
+                            Content = request.Logo.Content
+                        }
+                        : new Domain.Image()
                 };
+
                 await _companyRepository.Add(company, cancellationToken);
                 await _companyRepository.SaveChanges(cancellationToken);
                 _logger.LogInformation("Добавлена компания {@CompanyStruct}", new
@@ -73,7 +87,11 @@ namespace HRTech.Application.Services.Company.Implementations
             try
             {
                 var company = await GetCompanyAndCheckForNull(id);
-
+                
+                if (company.Image != null)
+                {
+                    await _imageRepository.Delete(company.Image, cancellationToken);
+                }
                 await _companyRepository.Delete(company, cancellationToken);
                 await _companyRepository.SaveChanges(cancellationToken);
                 _logger.LogInformation("Удалена компания {@CompanyStruct}", new
@@ -113,7 +131,14 @@ namespace HRTech.Application.Services.Company.Implementations
                             PhoneNumber = x.PhoneNumber,
                             UserName = x.UserName
                         }).ToList()
-                        : new List<Get.Response.Employee>()
+                        : new List<Get.Response.Employee>(),
+                    Logo = company.Image != null ?
+                        new Get.Response.LogoCompany
+                        {
+                            FileGuid = company.Image.FileGuid,
+                            Content = company.Image.Content,
+                            FileName = company.Image.FileName
+                        } : new Get.Response.LogoCompany()
                 };
             }
             catch (Exception e)
@@ -144,7 +169,14 @@ namespace HRTech.Application.Services.Company.Implementations
                             UserName = x.UserName
                         }).ToList()
                         : new List<Get.Response.Employee>(),
-                    CountEmployee = com.Employees?.Count() ?? 0
+                    CountEmployee = com.Employees?.Count ?? 0,
+                    Logo = com.Image != null ?
+                        new Get.Response.LogoCompany
+                        {
+                            FileGuid = com.Image.FileGuid,
+                            Content = com.Image.Content,
+                            FileName = com.Image.FileName
+                        } : new Get.Response.LogoCompany()
                 })
             };
         }
@@ -154,6 +186,8 @@ namespace HRTech.Application.Services.Company.Implementations
             try
             {
                 var company = await GetCompanyAndCheckForNull(request.id);
+
+                await UpdateLogo(company, request, cancellationToken);
                 
                 company.CompanyName = request.CompanyName;
                 company.UpdateDateTime = DateTime.UtcNow;
@@ -171,6 +205,17 @@ namespace HRTech.Application.Services.Company.Implementations
                 throw new Exception( "Произошла ошибка при редактировании компании", e);
             }
 
+        }
+
+        private async Task UpdateLogo(Domain.Company company, Edit.Request request, CancellationToken cancellationToken)
+        {
+            if (request.Logo !=null)
+            {
+                company.Image.FileName = request.Logo.FileName;
+                company.Image.FileType = request.Logo.FileType;
+                company.Image.FileGuid = request.Logo.FileGuid;
+                company.Image.Content = request.Logo.Content;
+            }
         }
 
         private async Task<Domain.Company> GetCompanyAndCheckForNull(Guid id)
