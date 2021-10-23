@@ -56,7 +56,8 @@ namespace HRTech.Application.Services.Company.Implementations
                             FileGuid = request.Logo.FileGuid,
                             FileName = request.Logo.FileName,
                             FileType = request.Logo.FileType,
-                            Content = request.Logo.Content
+                            Content = request.Logo.Content,
+                            CreatedDateTime = DateTime.UtcNow
                         }
                         : new Domain.Image()
                 };
