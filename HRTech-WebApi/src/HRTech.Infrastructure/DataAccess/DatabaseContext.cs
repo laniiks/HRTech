@@ -11,6 +11,8 @@ namespace HRTech.Infrastructure.DataAccess
     {
         public DbSet<Company> Companies { get; set; }
         public DbSet<Image> Images { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var config = new ConfigurationBuilder()

@@ -12,5 +12,6 @@ namespace HRTech.Domain
         public CompanyState State { get; set; }
         public virtual ICollection<ApplicationUser> Employees { get; set; }
         public virtual Image? Image { get; set; }
+        public virtual Address Address { get; set; }
     }
 }

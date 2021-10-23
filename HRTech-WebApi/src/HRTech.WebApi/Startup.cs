@@ -3,6 +3,8 @@ using System.Text;
 using AutoMapper;
 using HRTech.Application.Abstractions;
 using HRTech.Application.Mapping;
+using HRTech.Application.Services.Address.Implementations;
+using HRTech.Application.Services.Address.Interfaces;
 using HRTech.Application.Services.Company.Implementations;
 using HRTech.Application.Services.Company.Interfaces;
 using HRTech.Application.Services.User.Implementations;
@@ -79,10 +81,12 @@ namespace HRTech.WebApi
                 //Services
                 .AddTransient<IUserService, UserService>()
                 .AddTransient<ICompanyService, CompanyService>()
+                .AddTransient<IAddressService, AddressService>()
                 
                 //Repositories
                 .AddTransient<ICompanyRepository, CompanyRepository>()
-                .AddTransient<IRepository<Image>, BaseRepository<Image>>();
+                .AddTransient<IRepository<Image>, BaseRepository<Image>>()
+                .AddTransient<IRepository<Address>, BaseRepository<Address>>();
             
         }
 

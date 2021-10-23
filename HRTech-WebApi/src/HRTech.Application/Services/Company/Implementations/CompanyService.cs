@@ -19,6 +19,8 @@ namespace HRTech.Application.Services.Company.Implementations
     {
         private readonly ICompanyRepository _companyRepository;
         private readonly IRepository<Domain.Image> _imageRepository;
+        private readonly IRepository<Domain.Address> _addressRepository;
+
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
@@ -30,7 +32,8 @@ namespace HRTech.Application.Services.Company.Implementations
             IUserService userService, 
             ILogger<CompanyService> logger, 
             IMapper mapper, 
-            IRepository<Domain.Image> imageRepository)
+            IRepository<Domain.Image> imageRepository, 
+            IRepository<Domain.Address> addressRepository)
         {
             _companyRepository = companyRepository;
             _userManager = userManager;
@@ -38,6 +41,7 @@ namespace HRTech.Application.Services.Company.Implementations
             _logger = logger;
             _mapper = mapper;
             _imageRepository = imageRepository;
+            _addressRepository = addressRepository;
         }
 
         public async Task<Create.Response> Create(Create.Request request, CancellationToken cancellationToken)
@@ -59,7 +63,15 @@ namespace HRTech.Application.Services.Company.Implementations
                             Content = request.Logo.Content,
                             CreatedDateTime = DateTime.UtcNow
                         }
-                        : new Domain.Image()
+                        : new Domain.Image(),
+                    Address = new Domain.Address
+                    {
+                        Country = request.CompanyAddress.Country,
+                        City = request.CompanyAddress.City,
+                        Street = request.CompanyAddress.Street,
+                        HouseNumber = request.CompanyAddress.HouseNumber,
+                        CreatedDateTime = DateTime.UtcNow
+                    }
                 };
 
                 await _companyRepository.Add(company, cancellationToken);
@@ -93,6 +105,8 @@ namespace HRTech.Application.Services.Company.Implementations
                 {
                     await _imageRepository.Delete(company.Image, cancellationToken);
                 }
+
+                await _addressRepository.Delete(company.Address, cancellationToken);
                 await _companyRepository.Delete(company, cancellationToken);
                 await _companyRepository.SaveChanges(cancellationToken);
                 _logger.LogInformation("Удалена компания {@CompanyStruct}", new
@@ -139,7 +153,14 @@ namespace HRTech.Application.Services.Company.Implementations
                             FileGuid = company.Image.FileGuid,
                             Content = company.Image.Content,
                             FileName = company.Image.FileName
-                        } : new Get.Response.LogoCompany()
+                        } : new Get.Response.LogoCompany(),
+                    CompanyAddress = new Get.Response.Address()
+                    {
+                        Country = company.Address.Country,
+                        City = company.Address.City,
+                        Street = company.Address.Street,
+                        HouseNumber = company.Address.HouseNumber
+                    }
                 };
             }
             catch (Exception e)
@@ -188,8 +209,8 @@ namespace HRTech.Application.Services.Company.Implementations
             {
                 var company = await GetCompanyAndCheckForNull(request.id);
 
-                await UpdateLogo(company, request, cancellationToken);
-                
+                UpdateLogo(company, request, cancellationToken);
+
                 company.CompanyName = request.CompanyName;
                 company.UpdateDateTime = DateTime.UtcNow;
                 
@@ -208,7 +229,7 @@ namespace HRTech.Application.Services.Company.Implementations
 
         }
 
-        private async Task UpdateLogo(Domain.Company company, Edit.Request request, CancellationToken cancellationToken)
+        private void UpdateLogo(Domain.Company company, Edit.Request request, CancellationToken cancellationToken)
         {
             if (request.Logo !=null)
             {

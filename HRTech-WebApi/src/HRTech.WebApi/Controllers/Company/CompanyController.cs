@@ -51,7 +51,14 @@ namespace HRTech.WebApi.Controllers.Company
                         FileName = fileName,
                         FileType = fileExtension,
                         Content = target.ToArray()
-                    } : new Create.Request.LogoCompany()
+                    } : new Create.Request.LogoCompany(),
+                    CompanyAddress = new Create.Request.Address
+                    {
+                        Country = request.Country,
+                        City = request.City,
+                        Street = request.Street,
+                        HouseNumber = request.HouseNumber
+                    }
                 }, cancellationToken);
             }
             catch (Exception e)
