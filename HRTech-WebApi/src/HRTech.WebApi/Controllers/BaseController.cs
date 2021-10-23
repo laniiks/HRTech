@@ -18,7 +18,9 @@ namespace HRTech.WebApi.Controllers
             _mapper = mapper;
             _userManager = userManager;
         }
-        
+
+        public BaseController() { }
+
         protected async Task<ApplicationUser> GetCurrentUser()
         {
             return await _userManager.FindByEmailAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);

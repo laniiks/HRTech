@@ -3,48 +3,21 @@ using System;
 using HRTech.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HRTech.Infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20211020223919_AddCompany")]
+    partial class AddCompany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.11");
-
-            modelBuilder.Entity("HRTech.Domain.Address", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("City")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Country")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("HouseNumber")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Street")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("UpdateDateTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Addresses");
-                });
 
             modelBuilder.Entity("HRTech.Domain.ApplicationUser", b =>
                 {
@@ -130,58 +103,18 @@ namespace HRTech.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid?>("AddressId")
-                        .HasColumnType("char(36)");
-
                     b.Property<string>("CompanyName")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("UpdateDateTime")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId");
-
-                    b.ToTable("Companies");
-                });
-
-            modelBuilder.Entity("HRTech.Domain.Image", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<byte[]>("Content")
-                        .HasColumnType("longblob");
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("FileGuid")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("FileName")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("FileType")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId")
-                        .IsUnique();
-
-                    b.ToTable("Images");
+                    b.ToTable("Company");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -323,26 +256,6 @@ namespace HRTech.Infrastructure.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("HRTech.Domain.Company", b =>
-                {
-                    b.HasOne("HRTech.Domain.Address", "Address")
-                        .WithMany("Companies")
-                        .HasForeignKey("AddressId");
-
-                    b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("HRTech.Domain.Image", b =>
-                {
-                    b.HasOne("HRTech.Domain.Company", "Company")
-                        .WithOne("Image")
-                        .HasForeignKey("HRTech.Domain.Image", "CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -394,16 +307,9 @@ namespace HRTech.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("HRTech.Domain.Address", b =>
-                {
-                    b.Navigation("Companies");
-                });
-
             modelBuilder.Entity("HRTech.Domain.Company", b =>
                 {
                     b.Navigation("Employees");
-
-                    b.Navigation("Image");
                 });
 #pragma warning restore 612, 618
         }

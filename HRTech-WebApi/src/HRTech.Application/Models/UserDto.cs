@@ -1,4 +1,6 @@
-﻿namespace HRTech.Application.Models
+﻿using System;
+
+namespace HRTech.Application.Models
 {
     public class UserDto
     {
@@ -8,5 +10,7 @@
         public string Patronymic { get; set; }
         public string PhoneNumber { get; set; }
         public string UserName { get; set; }
+        
+        public Guid CompanyId { get; set; }
     }
 }

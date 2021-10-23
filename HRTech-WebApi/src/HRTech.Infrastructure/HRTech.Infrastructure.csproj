@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\HRTech.Application\HRTech.Application.csproj" />
       <ProjectReference Include="..\HRTech.Domain\HRTech.Domain.csproj" />
     </ItemGroup>
 

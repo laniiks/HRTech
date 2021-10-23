@@ -1,4 +1,6 @@
-﻿namespace HRTech.WebApi.Models.User
+﻿using System;
+
+namespace HRTech.WebApi.Models.User
 {
     public class RegisterRequest
     {
@@ -9,5 +11,6 @@
         public string PhoneNumber { get; set; }
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
+        public Guid CompanyId { get; set; }
     }
 }

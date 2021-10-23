@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Common\Common.csproj" />
       <ProjectReference Include="..\HRTech.Application\HRTech.Application.csproj" />
       <ProjectReference Include="..\HRTech.Infrastructure\HRTech.Infrastructure.csproj" />
     </ItemGroup>
