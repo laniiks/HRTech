@@ -28,6 +28,15 @@ namespace HRTech.Application.Services.Company.Contracts
                 public string HouseNumber { get; set; }
             }
             public Address CompanyAddress { get; set; }
+            
+            public sealed class ExcelFileUsers
+            {
+                public Guid FileGuid { get; set; }
+                public string FileName { get; set; }
+                public string FileType { get; set; }
+                public byte[] Content { get; set; }
+            }
+            public ExcelFileUsers CompanyExcelFileUsers { get; set; }
         }
 
         public sealed class Response

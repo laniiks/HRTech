@@ -6,7 +6,8 @@ namespace HRTech.WebApi.Models.Company
     public class CreateCompanyRequest
     {
         public string CompanyName { get; set; }
-        public IFormFile File { get; set; }
+        public IFormFile Logo { get; set; }
+        public IFormFile ExcelFileUsers { get; set; }
         
         public string Country { get; set; }
         public string City { get; set; }

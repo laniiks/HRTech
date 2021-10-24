@@ -71,7 +71,17 @@ namespace HRTech.Application.Services.Company.Implementations
                         Street = request.CompanyAddress.Street,
                         HouseNumber = request.CompanyAddress.HouseNumber,
                         CreatedDateTime = DateTime.UtcNow
-                    }
+                    },
+                    ExcelFileUsers = request.CompanyExcelFileUsers != null
+                        ? new ExcelFileUsers
+                        {
+                            FileGuid = request.CompanyExcelFileUsers.FileGuid,
+                            FileName = request.CompanyExcelFileUsers.FileName,
+                            FileType = request.CompanyExcelFileUsers.FileType,
+                            Content = request.CompanyExcelFileUsers.Content,
+                            CreatedDateTime = DateTime.UtcNow
+                        }
+                        : new ExcelFileUsers(),
                 };
 
                 await _companyRepository.Add(company, cancellationToken);

@@ -26,31 +26,21 @@ namespace HRTech.WebApi.Controllers.Company
             CancellationToken cancellationToken)
         {
             Create.Response response;
-            string fileName = null;
-            string fileExtension = null;
-            var target = new MemoryStream();
+            
             try
             {
-                if (request.File is {Length: > 0})
-                {
-                    fileName = request.File.FileName;
-                    fileExtension = Path.GetExtension(fileName);
-                    await using (target)
-                    {
-                        target.Position = 0;
-                        await request.File.CopyToAsync(target, cancellationToken);
-                    }
-                }
+                var logo = GetFileInfo(request.Logo);
+                var excelFile = GetFileInfo(request.ExcelFileUsers);
 
                 response = await _companyService.Create(new Create.Request
                 {
                     CompanyName = request.CompanyName,
-                    Logo = request.File is {Length: > 0} ? new Create.Request.LogoCompany
+                    Logo = logo != null ? new Create.Request.LogoCompany
                     {
-                        FileGuid = Guid.NewGuid(),
-                        FileName = fileName,
-                        FileType = fileExtension,
-                        Content = target.ToArray()
+                        FileGuid = logo.FileGuid,
+                        FileName = logo.FileName,
+                        FileType = logo.FileType,
+                        Content = logo.Content
                     } : new Create.Request.LogoCompany(),
                     CompanyAddress = new Create.Request.Address
                     {
@@ -58,7 +48,14 @@ namespace HRTech.WebApi.Controllers.Company
                         City = request.City,
                         Street = request.Street,
                         HouseNumber = request.HouseNumber
-                    }
+                    },
+                    CompanyExcelFileUsers = excelFile != null ? new Create.Request.ExcelFileUsers
+                    {
+                        FileGuid = excelFile.FileGuid,
+                        FileName = excelFile.FileName,
+                        FileType = excelFile.FileType,
+                        Content = excelFile.Content
+                    } : new Create.Request.ExcelFileUsers()
                 }, cancellationToken);
             }
             catch (Exception e)
