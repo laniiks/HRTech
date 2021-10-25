@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.Configuration;
 using HRTech.Application.Common;
+using HRTech.Application.Models;
 using HRTech.Application.Services.User.Interfaces;
 using HRTech.Domain;
 using Microsoft.AspNetCore.Identity;
@@ -18,17 +21,19 @@ namespace HRTech.Application.Services.User.Implementations
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger _logger;
+        private readonly IMapper _mapper;
 
         public UserService(
             UserManager<ApplicationUser> userManager, 
             SignInManager<ApplicationUser> signInManager, 
             RoleManager<IdentityRole> roleManager, 
-            ILogger<UserService> logger)
+            ILogger<UserService> logger, IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task<ApplicationUser> GetUserByEmail(string email)
@@ -85,6 +90,30 @@ namespace HRTech.Application.Services.User.Implementations
             });
             return result;
             
+        }
+
+        public async Task<ICollection<IdentityResult>> CreateRange(List<RegisterDto> users)
+        {
+            ICollection<IdentityResult> result = null;
+
+
+            foreach (var value in users)
+            {
+                var dto = new ApplicationUser
+                {
+                    FirstName = value.FirstName,
+                    LastName = value.LastName,
+                    Patronymic = value.Patronymic,
+                    Email = value.Email,
+                    //Password = value.Password,
+                    PhoneNumber = value.PhoneNumber,
+                    CompanyId = value.CompanyId,
+                    UserName = value.Email
+                };
+                result = new[] {await Create(dto, value.Password)};
+            }
+
+            return result;
         }
 
         public async Task<List<Claim>> GetValidClaims(ApplicationUser user)

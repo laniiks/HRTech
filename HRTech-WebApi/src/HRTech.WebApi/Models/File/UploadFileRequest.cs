@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace HRTech.Application.Models
+namespace HRTech.WebApi.Models.File
 {
-    public class FileDto
+    public class UploadFileRequest
     {
         public Guid FileGuid { get; set; }
         public string FileName { get; set; }
         public string FileType { get; set; }
         public byte[] Content { get; set; }
-        public Guid CompanyId { get; set; }
     }
 }

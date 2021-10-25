@@ -1,17 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using HRTech.WebApi.Models.Address;
+using HRTech.WebApi.Models.File;
 
 namespace HRTech.WebApi.Models.Company
 {
     public class CreateCompanyRequest
     {
         public string CompanyName { get; set; }
-        public IFormFile Logo { get; set; }
-        public IFormFile ExcelFileUsers { get; set; }
-        
-        public string Country { get; set; }
-        public string City { get; set; }
-        public string Street { get; set; }
-        public string HouseNumber { get; set; }
+        public UploadFileRequest Image { get; set; }
+        public UploadFileRequest ExcelFileUsers { get; set; }
+        public AddressCreateRequest Address { get; set; }
     }
 }

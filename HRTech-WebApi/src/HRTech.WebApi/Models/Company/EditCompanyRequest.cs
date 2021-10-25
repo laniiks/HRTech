@@ -1,4 +1,6 @@
 ﻿using System;
+using HRTech.WebApi.Models.Address;
+using HRTech.WebApi.Models.File;
 using Microsoft.AspNetCore.Http;
 
 namespace HRTech.WebApi.Models.Company
@@ -7,6 +9,7 @@ namespace HRTech.WebApi.Models.Company
     {
         public Guid id { get; set; }
         public string CompanyName { get; set; }
-        public IFormFile File { get; set; }
-    }
+        public UploadFileRequest Image { get; set; }
+        public UploadFileRequest ExcelFileUsers { get; set; }
+        public AddressCreateRequest Address { get; set; }    }
 }
