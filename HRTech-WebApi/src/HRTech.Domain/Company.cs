@@ -13,5 +13,6 @@ namespace HRTech.Domain
         public virtual ICollection<ApplicationUser> Employees { get; set; }
         public virtual Image? Image { get; set; }
         public virtual Address Address { get; set; }
+        public virtual ExcelFileUsers ExcelFileUsers { get; set; }
     }
 }

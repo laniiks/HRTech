@@ -7,11 +7,15 @@ using HRTech.Application.Services.Address.Implementations;
 using HRTech.Application.Services.Address.Interfaces;
 using HRTech.Application.Services.Company.Implementations;
 using HRTech.Application.Services.Company.Interfaces;
+using HRTech.Application.Services.CompanyExelFileUsers.Implementations;
+using HRTech.Application.Services.CompanyExelFileUsers.Interfaces;
 using HRTech.Application.Services.User.Implementations;
 using HRTech.Application.Services.User.Interfaces;
 using HRTech.Domain;
 using HRTech.Infrastructure.DataAccess;
 using HRTech.Infrastructure.DataAccess.Repositories;
+using HRTech.Infrastructure.GeneratePassword;
+using HRTech.Infrastructure.UsersFromExcelFile;
 using HRTech.WebApi.Mapping;
 using HRTech.WebApi.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -82,10 +86,14 @@ namespace HRTech.WebApi
                 .AddTransient<IUserService, UserService>()
                 .AddTransient<ICompanyService, CompanyService>()
                 .AddTransient<IAddressService, AddressService>()
+                .AddTransient<IGeneratePassword, GeneratePassword>()
+                .AddTransient<ICompanyExcelFileUsers, CompanyExcelFileUsersService>()
+                .AddTransient<IGetUsersFromExcelFile, GetUsersFromExcelFile>()
                 
                 //Repositories
                 .AddTransient<ICompanyRepository, CompanyRepository>()
                 .AddTransient<IRepository<Image>, BaseRepository<Image>>()
+                .AddTransient<IRepository<ExcelFileUsers>, BaseRepository<ExcelFileUsers>>()
                 .AddTransient<IRepository<Address>, BaseRepository<Address>>();
             
         }
@@ -141,7 +149,12 @@ namespace HRTech.WebApi
             var configuration = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<ApplicationUserMapProfile>();
+                cfg.AddProfile<ApiMappingProfile>();
                 cfg.AddProfile<UserProfile>();
+                cfg.AddProfile<CompanyProfile>();
+                cfg.AddProfile<LogoProfile>();
+                cfg.AddProfile<AddressProfile>();
+                cfg.AddProfile<ExcelFileUsersProfile>();
             });
             configuration.AssertConfigurationIsValid();
             return configuration;

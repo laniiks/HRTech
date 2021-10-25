@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using HRTech.Application.Models;
 using HRTech.Domain;
 using Microsoft.AspNetCore.Identity;
 
@@ -14,6 +15,8 @@ namespace HRTech.Application.Services.User.Interfaces
         Task SignOut();
         Task<bool> IsInRole(string userId, string role);
         Task<IdentityResult> Create(ApplicationUser user, string password);
+        Task<ICollection<IdentityResult>> CreateRange(List<RegisterDto> users);
+
         Task<List<Claim>> GetValidClaims(ApplicationUser user);
     }
 }

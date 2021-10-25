@@ -3,25 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using HRTech.Application.Services.Company.Contracts;
+using HRTech.Application.Models;
 
 namespace HRTech.Application.Services.Company.Interfaces
 {
     public interface ICompanyService
     {
-        Task<Create.Response> Create(Create.Request request, CancellationToken cancellationToken);
+        Task<Guid> Create(CompanyDto companyDto, CancellationToken cancellationToken);
         Task<bool> Delete(Guid id, CancellationToken cancellationToken);
-        Task<Get.Response> GetById(Guid id, CancellationToken cancellationToken);
-        Task<GetAll.Response> GetAllCompany(CancellationToken cancellationToken);
-        Task<Edit.Response> EditCompany(Edit.Request request, CancellationToken cancellationToken);
-
-    }
-
-    public class GetAll
-    {
-        public class Response
-        {
-            public IEnumerable<Get.Response> Companies { get; set; }
-        }
+        Task<CompanyDto> GetById(Guid id, CancellationToken cancellationToken);
+        Task<ICollection<Domain.Company>> GetAllCompany(CancellationToken cancellationToken);
+        Task<Guid> EditCompany(CompanyDto companyDto, CancellationToken cancellationToken);
+        Task<bool> ActiveCompany(Guid id, bool isRegisterUser, CancellationToken cancellationToken);
     }
 }

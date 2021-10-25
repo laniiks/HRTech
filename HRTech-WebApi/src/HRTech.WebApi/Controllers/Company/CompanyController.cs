@@ -1,9 +1,10 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using HRTech.Application.Services.Company.Contracts;
+using AutoMapper;
+using HRTech.Application.Models;
 using HRTech.Application.Services.Company.Interfaces;
+using HRTech.Application.Services.CompanyExelFileUsers.Interfaces;
 using HRTech.WebApi.Models.Company;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,128 +16,68 @@ namespace HRTech.WebApi.Controllers.Company
     public class CompanyController : BaseController
     {
         private readonly ICompanyService _companyService;
+        private readonly ICompanyExcelFileUsers _companyExcelFileUsers;
+        private readonly IMapper _mapper;
 
-        public CompanyController(ICompanyService companyService)
+        public CompanyController(ICompanyService companyService, IMapper mapper, ICompanyExcelFileUsers companyExcelFileUsers)
         {
             _companyService = companyService;
+            _mapper = mapper;
+            _companyExcelFileUsers = companyExcelFileUsers;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateNewCompany([FromForm]CreateCompanyRequest request,
-            CancellationToken cancellationToken)
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
         {
-            Create.Response response;
-            string fileName = null;
-            string fileExtension = null;
-            var target = new MemoryStream();
-            try
-            {
-                if (request.File is {Length: > 0})
-                {
-                    fileName = request.File.FileName;
-                    fileExtension = Path.GetExtension(fileName);
-                    await using (target)
-                    {
-                        target.Position = 0;
-                        await request.File.CopyToAsync(target, cancellationToken);
-                    }
-                }
-
-                response = await _companyService.Create(new Create.Request
-                {
-                    CompanyName = request.CompanyName,
-                    Logo = request.File is {Length: > 0} ? new Create.Request.LogoCompany
-                    {
-                        FileGuid = Guid.NewGuid(),
-                        FileName = fileName,
-                        FileType = fileExtension,
-                        Content = target.ToArray()
-                    } : new Create.Request.LogoCompany(),
-                    CompanyAddress = new Create.Request.Address
-                    {
-                        Country = request.Country,
-                        City = request.City,
-                        Street = request.Street,
-                        HouseNumber = request.HouseNumber
-                    }
-                }, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                Console.Write(e.Message);
-                return BadRequest(e.Message);
-            }
-
-            return Created($"api/company/{response.Id}", new {response.Id});
-        }
-
-        [HttpDelete]
-        public async Task<IActionResult> DeleteCompany(Guid companyId, CancellationToken cancellationToken)
-        {
-            var result = await _companyService.Delete(companyId, cancellationToken);
-
+            var result = await _companyService.GetById(id, cancellationToken);
             return Ok(result);
         }
-        
-        [HttpGet]
-        public async Task<IActionResult> GetByIdCompany(Guid companyId, CancellationToken cancellationToken)
-        {
-            var result = await _companyService.GetById(companyId, cancellationToken);
-            return Ok(result);
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> EditCompany([FromForm]EditCompanyRequest request, CancellationToken cancellationToken)
-        {
-            Edit.Response response;
-            try
-            {
-                if (request.File is {Length: > 0})
-                {
-                    var fileName = request.File.FileName;
-                    var fileExtension = Path.GetExtension(fileName);
-                    await using var target = new MemoryStream();
-                    target.Position = 0;
-                    await request.File.CopyToAsync(target, cancellationToken);
-                    response = await _companyService.EditCompany(new Edit.Request
-                    {
-                        id = request.id,
-                        CompanyName = request.CompanyName,
-                        Logo =  new Edit.Request.LogoCompany
-                        {
-                            FileGuid = Guid.NewGuid(),
-                            FileName = fileName,
-                            FileType = fileExtension,
-                            Content = target.ToArray()
-                        }
-                    }, cancellationToken);
-                }
-                else
-                {
-                    response = await _companyService.EditCompany(new Edit.Request
-                    {
-                        id = request.id,
-                        CompanyName = request.CompanyName
-                    }, cancellationToken);
-                }
-                
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-            return Created($"api/company/{response.Id}", new {response.Id});
-
-        }
-
-        [HttpGet("GetAllCompany")]
-        public async Task<IActionResult> GetAllCompany(CancellationToken cancellationToken)
+        [HttpGet("List")]
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
             var result = await _companyService.GetAllCompany(cancellationToken);
             return Ok(result);
         }
+        
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateCompanyRequest createCompanyRequest, CancellationToken cancellationToken)
+        {
+            var result = await _companyService
+                .Create(_mapper.Map<CompanyDto>(createCompanyRequest), cancellationToken);
+            return Ok(result);
+        }
+        
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        {
+            var result = await _companyService.Delete(id, cancellationToken);
+            return Ok(result);
+        }
 
+        [HttpPut("EditCompany")]
+        public async Task<IActionResult> EditCompany(EditCompanyRequest editCompanyRequest,
+            CancellationToken cancellationToken)
+        {
+            var result =
+                await _companyService.EditCompany(_mapper.Map<CompanyDto>(editCompanyRequest), cancellationToken);
+            return Ok(result);
+        }
+
+        [HttpPut("ActiveCompany")]
+        public async Task<IActionResult> ActiveCompany(Guid id, bool isRegisterUser)
+        {
+            var result = await _companyService.ActiveCompany(id, isRegisterUser, CancellationToken.None);
+            return Ok(result);
+        }
+
+        [HttpPost("AddFileExcelUsersInCompany")]
+        public async Task<IActionResult> AddFileExcelUsersInCompany(Guid id, IFormFile formFile,
+            CancellationToken cancellationToken)
+        {
+            var file = GetFileInfo(formFile);
+            var result = await _companyExcelFileUsers.AddFileExcelUsersInCompany(id, file, cancellationToken);
+            return Ok(result);
+        }
 
     }
 }
