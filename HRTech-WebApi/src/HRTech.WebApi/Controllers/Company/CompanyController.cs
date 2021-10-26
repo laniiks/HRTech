@@ -32,10 +32,18 @@ namespace HRTech.WebApi.Controllers.Company
             var result = await _companyService.GetById(id, cancellationToken);
             return Ok(result);
         }
-        [HttpGet("List")]
+        
+        [HttpGet("GetNewOrActiveCompany")]
+        public async Task<IActionResult> GetNewOrActiveCompany(bool isNewCompany, CancellationToken cancellationToken)
+        {
+            var result = await _companyService.GetNewOrActiveCompany(isNewCompany, cancellationToken);
+            return Ok(result);
+        }
+        
+        [HttpGet("All")]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            var result = await _companyService.GetAllCompany(cancellationToken);
+            var result = await _companyService.GetAll(cancellationToken);
             return Ok(result);
         }
         

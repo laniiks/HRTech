@@ -104,9 +104,30 @@ namespace HRTech.Application.Services.Company.Implementations
             return _mapper.Map<CompanyDto>(company);
         }
 
-        public async Task<ICollection<Domain.Company>> GetAllCompany(CancellationToken cancellationToken)
+        public async Task<ICollection<Domain.Company>> GetNewOrActiveCompany(bool isNewCompany, CancellationToken cancellationToken)
         {
-            var company = _mapper.Map<ICollection<CompanyDto>>(await _companyRepository.GetAll(CompanyState.New, cancellationToken));
+            ICollection<CompanyDto> company;
+            if (isNewCompany)
+            {
+                company = _mapper.Map<ICollection<CompanyDto>>(await _companyRepository.GetAll(CompanyState.New, cancellationToken));
+            }
+            else
+            {
+                company = _mapper.Map<ICollection<CompanyDto>>(await _companyRepository.GetAll(CompanyState.Active, cancellationToken));
+            }
+
+            if (company == null)
+            {
+                throw new Exception("Не найдено");
+            }
+
+            return _mapper.Map<ICollection<Domain.Company>>(company);
+        }
+
+        public async Task<ICollection<Domain.Company>> GetAll(CancellationToken cancellationToken)
+        {
+            var company = _mapper.Map<ICollection<CompanyDto>>(await _companyRepository.GetAll(cancellationToken));
+
             if (company == null)
             {
                 throw new Exception("Не найдено");
