@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HRTech.Application.Models
 {
@@ -12,5 +13,7 @@ namespace HRTech.Application.Models
         public string UserName { get; set; }
         
         public Guid CompanyId { get; set; }
+        
+        public virtual ICollection<PersonalDevelopmentPlanDto> PersonalDevelopmentPlans { get; set; }
     }
 }
