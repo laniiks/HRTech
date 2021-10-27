@@ -17,8 +17,14 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Reference Include="MassTransit, Version=7.2.3.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa">
+        <HintPath>C:\Users\User\.nuget\packages\masstransit\7.2.3\lib\netstandard2.0\MassTransit.dll</HintPath>
+      </Reference>
       <Reference Include="Microsoft.AspNetCore.Identity, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
         <HintPath>C:\Users\User\.dotnet\shared\Microsoft.AspNetCore.App\5.0.11\Microsoft.AspNetCore.Identity.dll</HintPath>
+      </Reference>
+      <Reference Include="MimeKit, Version=2.15.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814">
+        <HintPath>C:\Users\User\.nuget\packages\mimekit\2.15.0\lib\net50\MimeKit.dll</HintPath>
       </Reference>
     </ItemGroup>
 
