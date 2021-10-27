@@ -4,4 +4,10 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Reference Include="MimeKit, Version=2.15.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814">
+        <HintPath>C:\Users\User\.nuget\packages\mimekit\2.15.0\lib\net50\MimeKit.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

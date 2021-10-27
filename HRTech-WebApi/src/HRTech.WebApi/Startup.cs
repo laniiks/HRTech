@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
+using Common.HtmlMessage;
 using HRTech.Application.Abstractions;
 using HRTech.Application.Mapping;
 using HRTech.Application.Services.Address.Implementations;
@@ -9,15 +10,19 @@ using HRTech.Application.Services.Company.Implementations;
 using HRTech.Application.Services.Company.Interfaces;
 using HRTech.Application.Services.CompanyExelFileUsers.Implementations;
 using HRTech.Application.Services.CompanyExelFileUsers.Interfaces;
+using HRTech.Application.Services.Mail.Interfaces;
 using HRTech.Application.Services.User.Implementations;
 using HRTech.Application.Services.User.Interfaces;
 using HRTech.Domain;
+using HRTech.Infrastructure.Consumers;
 using HRTech.Infrastructure.DataAccess;
 using HRTech.Infrastructure.DataAccess.Repositories;
 using HRTech.Infrastructure.GeneratePassword;
+using HRTech.Infrastructure.Mail;
 using HRTech.Infrastructure.UsersFromExcelFile;
 using HRTech.WebApi.Mapping;
 using HRTech.WebApi.Utils;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -42,6 +47,24 @@ namespace HRTech.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMassTransit(conf =>
+            {
+                conf.AddConsumer<SendEmailConsumer>();
+
+                conf.UsingRabbitMq((context, c) =>
+                {
+                    c.Host("localhost", host =>
+                    {
+                        host.Username("guest");
+                        host.Password("guest");
+                    });
+
+                    c.ReceiveEndpoint("send_email", e => e.ConfigureConsumer<SendEmailConsumer>(context));
+                });
+            });
+
+            services.AddMassTransitHostedService();
+            
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -86,15 +109,20 @@ namespace HRTech.WebApi
                 .AddTransient<IUserService, UserService>()
                 .AddTransient<ICompanyService, CompanyService>()
                 .AddTransient<IAddressService, AddressService>()
-                .AddTransient<IGeneratePassword, GeneratePassword>()
                 .AddTransient<ICompanyExcelFileUsers, CompanyExcelFileUsersService>()
-                .AddTransient<IGetUsersFromExcelFile, GetUsersFromExcelFile>()
                 
                 //Repositories
                 .AddTransient<ICompanyRepository, CompanyRepository>()
                 .AddTransient<IRepository<Image>, BaseRepository<Image>>()
                 .AddTransient<IRepository<ExcelFileUsers>, BaseRepository<ExcelFileUsers>>()
-                .AddTransient<IRepository<Address>, BaseRepository<Address>>();
+                .AddTransient<IRepository<Address>, BaseRepository<Address>>()
+                
+                //Infrastructure
+                .AddTransient<IGetUsersFromExcelFile, GetUsersFromExcelFile>()
+                .AddTransient<IGeneratePassword, GeneratePassword>()
+                .Configure<MailSettings>(Configuration.GetSection("MailSettings"))
+                .AddTransient<IMailService, MailService>()
+                .AddTransient<HtmlMessage>();
             
         }
 

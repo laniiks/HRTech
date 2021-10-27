@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.Configuration;
+using Common.HtmlMessage;
 using HRTech.Application.Common;
 using HRTech.Application.Models;
+using HRTech.Application.Services.User.Contracts;
 using HRTech.Application.Services.User.Interfaces;
 using HRTech.Domain;
+using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
@@ -22,18 +23,23 @@ namespace HRTech.Application.Services.User.Implementations
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
+        private readonly ISendEndpointProvider _sendEndpointProvider;
+        private readonly HtmlMessage _htmlMessage;
+
 
         public UserService(
             UserManager<ApplicationUser> userManager, 
             SignInManager<ApplicationUser> signInManager, 
             RoleManager<IdentityRole> roleManager, 
-            ILogger<UserService> logger, IMapper mapper)
+            ILogger<UserService> logger, IMapper mapper, ISendEndpointProvider sendEndpointProvider, HtmlMessage htmlMessage)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _logger = logger;
             _mapper = mapper;
+            _sendEndpointProvider = sendEndpointProvider;
+            _htmlMessage = htmlMessage;
         }
 
         public async Task<ApplicationUser> GetUserByEmail(string email)
@@ -81,6 +87,18 @@ namespace HRTech.Application.Services.User.Implementations
             await _userManager.AddToRoleAsync(user, RolesConst.User);
             await _signInManager.SignInAsync(user, isPersistent: false );
             
+            var name = user.FirstName + " " + user.LastName + " " + user.Patronymic;
+            var message = _htmlMessage.RegistrationConfirmation(name, user.Email, password);
+            message.ToMessageBody();
+            var sendNotification = new SendNotification
+            {
+                Recipient = user.Email,
+                Subject = "Учетные данные",
+                Message = message.HtmlBody
+            };
+
+            var endPoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:send_email"));
+            await endPoint.Send<SendNotification>(sendNotification);
             
             _logger.LogInformation("Создан новый пользователь {@UserStruct}", new
             {
