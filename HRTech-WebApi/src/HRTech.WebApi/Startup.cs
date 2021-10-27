@@ -11,6 +11,8 @@ using HRTech.Application.Services.Company.Interfaces;
 using HRTech.Application.Services.CompanyExelFileUsers.Implementations;
 using HRTech.Application.Services.CompanyExelFileUsers.Interfaces;
 using HRTech.Application.Services.Mail.Interfaces;
+using HRTech.Application.Services.PDP.Implementations;
+using HRTech.Application.Services.PDP.Interfaces;
 using HRTech.Application.Services.User.Implementations;
 using HRTech.Application.Services.User.Interfaces;
 using HRTech.Domain;
@@ -110,9 +112,11 @@ namespace HRTech.WebApi
                 .AddTransient<ICompanyService, CompanyService>()
                 .AddTransient<IAddressService, AddressService>()
                 .AddTransient<ICompanyExcelFileUsers, CompanyExcelFileUsersService>()
+                .AddTransient<IPersonalDeveloperPlanService, PersonalDeveloperPlanService>()
                 
                 //Repositories
                 .AddTransient<ICompanyRepository, CompanyRepository>()
+                .AddTransient<IPersonalDevelopmentPlanRepository, PersonalDevelopmentPlanRepository>()
                 .AddTransient<IRepository<Image>, BaseRepository<Image>>()
                 .AddTransient<IRepository<ExcelFileUsers>, BaseRepository<ExcelFileUsers>>()
                 .AddTransient<IRepository<Address>, BaseRepository<Address>>()
@@ -183,6 +187,7 @@ namespace HRTech.WebApi
                 cfg.AddProfile<LogoProfile>();
                 cfg.AddProfile<AddressProfile>();
                 cfg.AddProfile<ExcelFileUsersProfile>();
+                cfg.AddProfile<PersonalDevelopmentPlanProfile>();
             });
             configuration.AssertConfigurationIsValid();
             return configuration;
