@@ -14,5 +14,6 @@ namespace HRTech.Domain
         public virtual Image? Image { get; set; }
         public virtual Address Address { get; set; }
         public virtual ExcelFileUsers ExcelFileUsers { get; set; }
+        public virtual ICollection<Grade> GradesCollection { get; set; }
     }
 }

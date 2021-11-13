@@ -48,7 +48,7 @@ namespace HRTech.Infrastructure.UsersFromExcelFile
                     }
                 }
             }
-            var itemToRemove = users.SingleOrDefault(x => x.Email == "Email");
+            var itemToRemove = users.First();
             if (itemToRemove != null)
             {
                 users.Remove(itemToRemove);

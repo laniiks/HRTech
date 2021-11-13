@@ -13,5 +13,8 @@ namespace HRTech.Domain
         public Guid CompanyId { get; set; }
         public virtual Company Company { get; set; }
         public virtual ICollection<PersonalDevelopmentPlan> PersonalDevelopmentPlans { get; set; }
+        
+        public int? GradeId { get; set; }
+        public virtual Grade Grades { get; set; }
     }
 }

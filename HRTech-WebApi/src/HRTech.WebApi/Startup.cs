@@ -120,6 +120,7 @@ namespace HRTech.WebApi
                 .AddTransient<IRepository<Image>, BaseRepository<Image>>()
                 .AddTransient<IRepository<ExcelFileUsers>, BaseRepository<ExcelFileUsers>>()
                 .AddTransient<IRepository<Address>, BaseRepository<Address>>()
+                .AddTransient<IRepository<Grade>, BaseRepository<Grade>>()
                 
                 //Infrastructure
                 .AddTransient<IGetUsersFromExcelFile, GetUsersFromExcelFile>()
@@ -188,6 +189,7 @@ namespace HRTech.WebApi
                 cfg.AddProfile<AddressProfile>();
                 cfg.AddProfile<ExcelFileUsersProfile>();
                 cfg.AddProfile<PersonalDevelopmentPlanProfile>();
+                cfg.AddProfile<GradeProfile>();
             });
             configuration.AssertConfigurationIsValid();
             return configuration;

@@ -17,12 +17,14 @@ namespace HRTech.WebApi.Mapping
                 .ForMember(d=>d.CreatedDateTime, o=>o.MapFrom(m=>DateTime.UtcNow))
                 .ForMember(d=>d.State, o=>o.MapFrom(m=>CompanyState.New))
                 .ForMember(d=>d.Employees, o=>o.Ignore())
-                .ForMember(d=>d.UpdateDateTime, o=>o.Ignore());
+                .ForMember(d=>d.UpdateDateTime, o=>o.Ignore())
+                .ForMember(d=>d.GradesCollection, o=>o.Ignore());
             CreateMap<EditCompanyRequest, CompanyDto>()
                 .ForMember(d=>d.State, o=>o.Ignore())
                 .ForMember(d=>d.Employees, o=>o.Ignore())
                 .ForMember(d=>d.CreatedDateTime, o=>o.Ignore())
-                .ForMember(d=>d.UpdateDateTime, o=>o.MapFrom(m=>DateTime.UtcNow));
+                .ForMember(d=>d.UpdateDateTime, o=>o.MapFrom(m=>DateTime.UtcNow))
+                .ForMember(d=>d.GradesCollection, o=>o.Ignore());
             CreateMap<AddressCreateRequest, AddressDto>()
                 .ForMember(d=>d.Id, o=>o.Ignore())
                 .ForMember(d=>d.CreatedDateTime, o=>o.Ignore());

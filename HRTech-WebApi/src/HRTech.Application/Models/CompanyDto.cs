@@ -16,5 +16,6 @@ namespace HRTech.Application.Models
         public virtual FileDto Image { get; set; }
         public virtual AddressDto Address { get; set; }
         public virtual FileDto ExcelFileUsers { get; set; }
+        public virtual ICollection<GradeDto> GradesCollection { get; set; }
     }
 }

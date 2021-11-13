@@ -28,6 +28,8 @@ namespace HRTech.WebApi.Mapping
                 .ForMember(dest => dest.LockoutEnabled, opt => opt.Ignore())
                 .ForMember(dest => dest.AccessFailedCount, opt => opt.Ignore())
                 .ForMember(dest => dest.PersonalDevelopmentPlans, opt => opt.Ignore())
+                .ForMember(dest => dest.Grades, opt => opt.Ignore())
+                .ForMember(dest => dest.GradeId, opt => opt.Ignore())
                 .ForMember(dest => dest.Company, opt => opt.Ignore())
                 .ForMember(dest => dest.CompanyId, opt => opt.MapFrom(src=>src.CompanyId));
         }
