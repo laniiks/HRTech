@@ -145,6 +145,9 @@ namespace HRTech.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
                     b.Property<Guid?>("ExcelFileUsersId")
                         .HasColumnType("char(36)");
 
@@ -187,6 +190,26 @@ namespace HRTech.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ExcelFileUsers");
+                });
+
+            modelBuilder.Entity("HRTech.Domain.FileTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("Content")
+                        .HasColumnType("longblob");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FileTemplates");
                 });
 
             modelBuilder.Entity("HRTech.Domain.Grade", b =>

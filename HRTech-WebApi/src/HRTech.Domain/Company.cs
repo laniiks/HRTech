@@ -9,6 +9,7 @@ namespace HRTech.Domain
     public class Company : MutableEntity<Guid>
     {
         public string CompanyName { get; set; }
+        public string Description { get; set; }
         public CompanyState State { get; set; }
         public virtual ICollection<ApplicationUser> Employees { get; set; }
         public virtual Image? Image { get; set; }

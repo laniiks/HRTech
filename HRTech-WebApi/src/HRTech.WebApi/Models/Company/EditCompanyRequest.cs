@@ -9,6 +9,7 @@ namespace HRTech.WebApi.Models.Company
     {
         public Guid id { get; set; }
         public string CompanyName { get; set; }
+        public string Description { get; set; }
         public UploadFileRequest Image { get; set; }
         public UploadFileRequest ExcelFileUsers { get; set; }
         public AddressCreateRequest Address { get; set; }    }

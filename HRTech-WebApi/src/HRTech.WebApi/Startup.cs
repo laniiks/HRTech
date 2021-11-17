@@ -13,6 +13,8 @@ using HRTech.Application.Services.CompanyExelFileUsers.Interfaces;
 using HRTech.Application.Services.Mail.Interfaces;
 using HRTech.Application.Services.PDP.Implementations;
 using HRTech.Application.Services.PDP.Interfaces;
+using HRTech.Application.Services.TemplateFile.Implementations;
+using HRTech.Application.Services.TemplateFile.Interfaces;
 using HRTech.Application.Services.User.Implementations;
 using HRTech.Application.Services.User.Interfaces;
 using HRTech.Domain;
@@ -49,6 +51,13 @@ namespace HRTech.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
             services.AddMassTransit(conf =>
             {
                 conf.AddConsumer<SendEmailConsumer>();
@@ -113,7 +122,8 @@ namespace HRTech.WebApi
                 .AddTransient<IAddressService, AddressService>()
                 .AddTransient<ICompanyExcelFileUsers, CompanyExcelFileUsersService>()
                 .AddTransient<IPersonalDeveloperPlanService, PersonalDeveloperPlanService>()
-                
+                .AddTransient<ITemplateFileService, TemplateFileService>()
+
                 //Repositories
                 .AddTransient<ICompanyRepository, CompanyRepository>()
                 .AddTransient<IPersonalDevelopmentPlanRepository, PersonalDevelopmentPlanRepository>()
@@ -121,6 +131,8 @@ namespace HRTech.WebApi
                 .AddTransient<IRepository<ExcelFileUsers>, BaseRepository<ExcelFileUsers>>()
                 .AddTransient<IRepository<Address>, BaseRepository<Address>>()
                 .AddTransient<IRepository<Grade>, BaseRepository<Grade>>()
+                .AddTransient<IRepository<FileTemplate>, BaseRepository<FileTemplate>>()
+
                 
                 //Infrastructure
                 .AddTransient<IGetUsersFromExcelFile, GetUsersFromExcelFile>()
@@ -135,6 +147,8 @@ namespace HRTech.WebApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
             UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
+            app.UseCors("CorsPolicy");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -190,6 +204,7 @@ namespace HRTech.WebApi
                 cfg.AddProfile<ExcelFileUsersProfile>();
                 cfg.AddProfile<PersonalDevelopmentPlanProfile>();
                 cfg.AddProfile<GradeProfile>();
+                cfg.AddProfile<FileTemplateProfile>();
             });
             configuration.AssertConfigurationIsValid();
             return configuration;

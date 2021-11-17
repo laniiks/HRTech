@@ -20,7 +20,7 @@ namespace HRTech.Infrastructure.DataAccess.Repositories
 
         public async Task<T> GetById(int id, CancellationToken cancellationToken)
         {
-            return await _entity.FindAsync(id, cancellationToken);
+            return await _entity.FindAsync(id);
         }
         
         public async Task<T> GetByIdGuid(Guid id)

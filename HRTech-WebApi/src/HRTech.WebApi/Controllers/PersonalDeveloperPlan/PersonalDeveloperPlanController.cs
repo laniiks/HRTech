@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit.IO;
 
 namespace HRTech.WebApi.Controllers.PersonalDeveloperPlan
 {
@@ -33,10 +35,10 @@ namespace HRTech.WebApi.Controllers.PersonalDeveloperPlan
         }
         
         [HttpPost("AddPdpForUser")]
-        public async Task<IActionResult> AddPdpForUser(string title, IFormFile formFile,
+        public async Task<IActionResult> AddPdpForUser(string title,
             CancellationToken cancellationToken)
         {
-            var file = GetFileInfo(formFile);
+            var file = GetFileInfo(Request.Form.Files[0]);
             var dto = new PersonalDevelopmentPlanDto
             {
                 Title = title,
@@ -63,7 +65,7 @@ namespace HRTech.WebApi.Controllers.PersonalDeveloperPlan
         {
             var fileDto = await _personalDeveloperPlanService.GetFileAsync(fileGuid);
 
-            return File(fileDto.Content, "application/octet-stream", fileDto.FileName);
+            return File(fileDto.Content, GetContentType(fileDto.FileName), fileDto.FileName);
         }
 
     }

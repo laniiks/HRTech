@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using HRTech.Domain;
+using MassTransit.Futures.Contracts;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +15,7 @@ namespace HRTech.Infrastructure.DataAccess
         public DbSet<Address> Addresses { get; set; }
         public DbSet<PersonalDevelopmentPlan> PersonalDevelopmentPlans { get; set; }
         public DbSet<Grade> Grades { get; set; }
+        public DbSet<FileTemplate> FileTemplates { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var config = new ConfigurationBuilder()

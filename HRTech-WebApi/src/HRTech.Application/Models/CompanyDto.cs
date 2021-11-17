@@ -11,6 +11,7 @@ namespace HRTech.Application.Models
         public DateTime? UpdateDateTime { get; set; }
 
         public string CompanyName { get; set; }
+        public string Description { get; set; }
         public CompanyState State { get; set; }
         public virtual ICollection<UserDto> Employees { get; set; }
         public virtual FileDto Image { get; set; }
