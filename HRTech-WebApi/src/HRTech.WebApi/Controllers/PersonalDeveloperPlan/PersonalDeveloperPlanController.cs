@@ -53,7 +53,7 @@ namespace HRTech.WebApi.Controllers.PersonalDeveloperPlan
             return Ok(result);
         }
         
-        [HttpPost("GetAllPdpForUser")]
+        [HttpGet("GetAllPdpForUser")]
         public async Task<IActionResult> GetAllPdpForUser(CancellationToken cancellationToken)
         {
             var result = await _personalDeveloperPlanService.GetAllPdpForUser(await GetCurrentUser(), cancellationToken);

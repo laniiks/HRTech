@@ -12,5 +12,6 @@ namespace HRTech.Application.Models
         public string UserName { get; set; }
         
         public Guid CompanyId { get; set; }
+        public int GradeId { get; set; }
     }
 }

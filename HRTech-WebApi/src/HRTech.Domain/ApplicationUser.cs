@@ -16,5 +16,7 @@ namespace HRTech.Domain
         
         public int? GradeId { get; set; }
         public virtual Grade Grades { get; set; }
+        
+        // public virtual Image Photo { get; set; }
     }
 }

@@ -117,6 +117,13 @@ namespace HRTech.WebApi.Controllers.User
             return Ok(_mapper.Map<UserDto>(user));
         }
         
+        [HttpPut("UpdateGrade/{gradeId}")]
+        public async Task<IActionResult> UpdateGrade(int gradeId)
+        {
+            var result = _userService.UpdateGrade(await GetCurrentUser(), gradeId, CancellationToken.None);
+            return Ok(result);
+        }
+        
         
         private void AddErrors(IdentityResult result)
         {

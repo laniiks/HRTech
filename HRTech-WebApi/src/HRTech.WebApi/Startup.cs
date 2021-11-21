@@ -10,6 +10,8 @@ using HRTech.Application.Services.Company.Implementations;
 using HRTech.Application.Services.Company.Interfaces;
 using HRTech.Application.Services.CompanyExelFileUsers.Implementations;
 using HRTech.Application.Services.CompanyExelFileUsers.Interfaces;
+using HRTech.Application.Services.Grade.Implementations;
+using HRTech.Application.Services.Grade.Interfaces;
 using HRTech.Application.Services.Mail.Interfaces;
 using HRTech.Application.Services.PDP.Implementations;
 using HRTech.Application.Services.PDP.Interfaces;
@@ -76,7 +78,9 @@ namespace HRTech.WebApi
 
             services.AddMassTransitHostedService();
             
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "HRTech.WebApi", Version = "v1"});
@@ -123,6 +127,7 @@ namespace HRTech.WebApi
                 .AddTransient<ICompanyExcelFileUsers, CompanyExcelFileUsersService>()
                 .AddTransient<IPersonalDeveloperPlanService, PersonalDeveloperPlanService>()
                 .AddTransient<ITemplateFileService, TemplateFileService>()
+                .AddTransient<IGradeService, GradeService>()
 
                 //Repositories
                 .AddTransient<ICompanyRepository, CompanyRepository>()
@@ -130,8 +135,9 @@ namespace HRTech.WebApi
                 .AddTransient<IRepository<Image>, BaseRepository<Image>>()
                 .AddTransient<IRepository<ExcelFileUsers>, BaseRepository<ExcelFileUsers>>()
                 .AddTransient<IRepository<Address>, BaseRepository<Address>>()
-                .AddTransient<IRepository<Grade>, BaseRepository<Grade>>()
+                .AddTransient<IGradeRepository, GradeRepository>()
                 .AddTransient<IRepository<FileTemplate>, BaseRepository<FileTemplate>>()
+                .AddScoped<IRepository<ApplicationUser>, BaseRepository<ApplicationUser>>()
 
                 
                 //Infrastructure
