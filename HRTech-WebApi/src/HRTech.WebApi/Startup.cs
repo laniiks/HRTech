@@ -10,9 +10,13 @@ using HRTech.Application.Services.Company.Implementations;
 using HRTech.Application.Services.Company.Interfaces;
 using HRTech.Application.Services.CompanyExelFileUsers.Implementations;
 using HRTech.Application.Services.CompanyExelFileUsers.Interfaces;
+using HRTech.Application.Services.Grade.Implementations;
+using HRTech.Application.Services.Grade.Interfaces;
 using HRTech.Application.Services.Mail.Interfaces;
 using HRTech.Application.Services.PDP.Implementations;
 using HRTech.Application.Services.PDP.Interfaces;
+using HRTech.Application.Services.TemplateFile.Implementations;
+using HRTech.Application.Services.TemplateFile.Interfaces;
 using HRTech.Application.Services.User.Implementations;
 using HRTech.Application.Services.User.Interfaces;
 using HRTech.Domain;
@@ -49,6 +53,13 @@ namespace HRTech.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
             services.AddMassTransit(conf =>
             {
                 conf.AddConsumer<SendEmailConsumer>();
@@ -67,7 +78,9 @@ namespace HRTech.WebApi
 
             services.AddMassTransitHostedService();
             
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "HRTech.WebApi", Version = "v1"});
@@ -113,13 +126,19 @@ namespace HRTech.WebApi
                 .AddTransient<IAddressService, AddressService>()
                 .AddTransient<ICompanyExcelFileUsers, CompanyExcelFileUsersService>()
                 .AddTransient<IPersonalDeveloperPlanService, PersonalDeveloperPlanService>()
-                
+                .AddTransient<ITemplateFileService, TemplateFileService>()
+                .AddTransient<IGradeService, GradeService>()
+
                 //Repositories
                 .AddTransient<ICompanyRepository, CompanyRepository>()
                 .AddTransient<IPersonalDevelopmentPlanRepository, PersonalDevelopmentPlanRepository>()
                 .AddTransient<IRepository<Image>, BaseRepository<Image>>()
                 .AddTransient<IRepository<ExcelFileUsers>, BaseRepository<ExcelFileUsers>>()
                 .AddTransient<IRepository<Address>, BaseRepository<Address>>()
+                .AddTransient<IGradeRepository, GradeRepository>()
+                .AddTransient<IRepository<FileTemplate>, BaseRepository<FileTemplate>>()
+                .AddScoped<IRepository<ApplicationUser>, BaseRepository<ApplicationUser>>()
+
                 
                 //Infrastructure
                 .AddTransient<IGetUsersFromExcelFile, GetUsersFromExcelFile>()
@@ -134,6 +153,8 @@ namespace HRTech.WebApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
             UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
+            app.UseCors("CorsPolicy");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -188,6 +209,8 @@ namespace HRTech.WebApi
                 cfg.AddProfile<AddressProfile>();
                 cfg.AddProfile<ExcelFileUsersProfile>();
                 cfg.AddProfile<PersonalDevelopmentPlanProfile>();
+                cfg.AddProfile<GradeProfile>();
+                cfg.AddProfile<FileTemplateProfile>();
             });
             configuration.AssertConfigurationIsValid();
             return configuration;

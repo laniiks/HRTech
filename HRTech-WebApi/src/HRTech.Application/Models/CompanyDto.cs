@@ -11,10 +11,12 @@ namespace HRTech.Application.Models
         public DateTime? UpdateDateTime { get; set; }
 
         public string CompanyName { get; set; }
+        public string Description { get; set; }
         public CompanyState State { get; set; }
         public virtual ICollection<UserDto> Employees { get; set; }
         public virtual FileDto Image { get; set; }
         public virtual AddressDto Address { get; set; }
         public virtual FileDto ExcelFileUsers { get; set; }
+        public virtual ICollection<GradeDto> GradesCollection { get; set; }
     }
 }

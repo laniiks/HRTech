@@ -3,14 +3,16 @@ using System;
 using HRTech.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HRTech.Infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20211027220918_AddGradesInCompany")]
+    partial class AddGradesInCompany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,7 +56,7 @@ namespace HRTech.Infrastructure.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("CompanyId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -71,7 +73,7 @@ namespace HRTech.Infrastructure.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("GradeId")
+                    b.Property<int>("GradeId")
                         .HasColumnType("int");
 
                     b.Property<string>("LastName")
@@ -145,9 +147,6 @@ namespace HRTech.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
                     b.Property<Guid?>("ExcelFileUsersId")
                         .HasColumnType("char(36)");
 
@@ -190,26 +189,6 @@ namespace HRTech.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ExcelFileUsers");
-                });
-
-            modelBuilder.Entity("HRTech.Domain.FileTemplate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<byte[]>("Content")
-                        .HasColumnType("longblob");
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("FileName")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FileTemplates");
                 });
 
             modelBuilder.Entity("HRTech.Domain.Grade", b =>
@@ -432,11 +411,15 @@ namespace HRTech.Infrastructure.Migrations
                 {
                     b.HasOne("HRTech.Domain.Company", "Company")
                         .WithMany("Employees")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("HRTech.Domain.Grade", "Grades")
                         .WithOne("ApplicationUser")
-                        .HasForeignKey("HRTech.Domain.ApplicationUser", "GradeId");
+                        .HasForeignKey("HRTech.Domain.ApplicationUser", "GradeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Company");
 

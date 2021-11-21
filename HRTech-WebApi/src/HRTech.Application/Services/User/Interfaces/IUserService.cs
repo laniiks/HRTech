@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using HRTech.Application.Models;
 using HRTech.Domain;
@@ -18,5 +19,6 @@ namespace HRTech.Application.Services.User.Interfaces
         Task<ICollection<IdentityResult>> CreateRange(List<RegisterDto> users);
 
         Task<List<Claim>> GetValidClaims(ApplicationUser user);
+        Task<int> UpdateGrade(ApplicationUser user, int idGrade, CancellationToken cancellationToken);
     }
 }

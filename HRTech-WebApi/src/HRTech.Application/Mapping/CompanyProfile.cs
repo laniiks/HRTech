@@ -11,7 +11,6 @@ namespace HRTech.Application.Mapping
             CreateMap<Company, CompanyDto>();
             CreateMap<CompanyDto, Company>()
                 .ForMember(d => d.Employees, opt => opt.Ignore());
-                
         }
     }
 }

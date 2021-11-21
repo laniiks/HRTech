@@ -11,6 +11,7 @@ services:
       MYSQL_PASSWORD: password
     ports: 
       - "6033:3306"
+    restart: unless-stopped
     volumes:
       - ./data/db:/var/lib/mysql
   seq:
@@ -33,6 +34,7 @@ services:
       AMQP_URL: 'amqp://rabbitmq?connection_attempts=5&retry_delay=5'
       RABBITMQ_DEFAULT_USER: "guest"
       RABBITMQ_DEFAULT_PASS: "guest"
+    restart: unless-stopped
     networks:
       - rabbitmq_go_net
 networks:

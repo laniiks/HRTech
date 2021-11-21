@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Common.HtmlMessage;
+using HRTech.Application.Abstractions;
 using HRTech.Application.Common;
 using HRTech.Application.Models;
 using HRTech.Application.Services.User.Contracts;
@@ -25,13 +27,15 @@ namespace HRTech.Application.Services.User.Implementations
         private readonly IMapper _mapper;
         private readonly ISendEndpointProvider _sendEndpointProvider;
         private readonly HtmlMessage _htmlMessage;
+        private readonly IRepository<ApplicationUser> _repository;
+        private readonly IGradeRepository _gradeRepository;
 
 
         public UserService(
             UserManager<ApplicationUser> userManager, 
             SignInManager<ApplicationUser> signInManager, 
             RoleManager<IdentityRole> roleManager, 
-            ILogger<UserService> logger, IMapper mapper, ISendEndpointProvider sendEndpointProvider, HtmlMessage htmlMessage)
+            ILogger<UserService> logger, IMapper mapper, ISendEndpointProvider sendEndpointProvider, HtmlMessage htmlMessage, IRepository<ApplicationUser> repository, IGradeRepository gradeRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -40,6 +44,8 @@ namespace HRTech.Application.Services.User.Implementations
             _mapper = mapper;
             _sendEndpointProvider = sendEndpointProvider;
             _htmlMessage = htmlMessage;
+            _repository = repository;
+            _gradeRepository = gradeRepository;
         }
 
         public async Task<ApplicationUser> GetUserByEmail(string email)
@@ -162,6 +168,14 @@ namespace HRTech.Application.Services.User.Implementations
             }
 
             return claims;        
+        }
+
+        public async Task<int> UpdateGrade(ApplicationUser user, int idGrade, CancellationToken cancellationToken)
+        {
+            var users = await _userManager.FindByIdAsync(user.Id);
+            users.GradeId = idGrade;
+            await _userManager.UpdateAsync(users);
+            return idGrade;
         }
     }
 }

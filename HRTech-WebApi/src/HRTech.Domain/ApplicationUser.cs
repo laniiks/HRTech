@@ -10,8 +10,13 @@ namespace HRTech.Domain
         public string LastName { get; set; }
         public string Patronymic { get; set; }
         
-        public Guid CompanyId { get; set; }
+        public Guid? CompanyId { get; set; }
         public virtual Company Company { get; set; }
         public virtual ICollection<PersonalDevelopmentPlan> PersonalDevelopmentPlans { get; set; }
+        
+        public int? GradeId { get; set; }
+        public virtual Grade Grades { get; set; }
+        
+        // public virtual Image Photo { get; set; }
     }
 }
