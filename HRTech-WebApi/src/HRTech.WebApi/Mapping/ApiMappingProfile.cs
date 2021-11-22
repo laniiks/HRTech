@@ -3,6 +3,7 @@ using AutoMapper;
 using Common.Enums;
 using HRTech.Application.Models;
 using HRTech.WebApi.Models.Address;
+using HRTech.WebApi.Models.Comment;
 using HRTech.WebApi.Models.Company;
 using HRTech.WebApi.Models.File;
 
@@ -35,6 +36,13 @@ namespace HRTech.WebApi.Mapping
                 .ForMember(d=>d.CreatedDateTime, o=>o.Ignore());
             CreateMap<UploadFileRequest, FileDto>()
                 .ForMember(d=>d.CompanyId, o=>o.Ignore());
+            
+            CreateMap<CommentCreateRequest, CommentDto>()
+                .ForMember(d => d.UserName, opt => opt.Ignore())
+                .ForMember(d => d.ApplicationUserId, opt => opt.Ignore())
+                .ForMember(d => d.Id, opt => opt.Ignore())
+                .ForMember(d => d.EvaluationId, opt => opt.Ignore())
+                .ForMember(d => d.CreatedDateTime, opt => opt.MapFrom(m => DateTime.UtcNow));
         }
     }
 }

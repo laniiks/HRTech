@@ -1,12 +1,17 @@
-﻿version: "3.7"
+version: "3.7"
 
 services:
-  webapi:
+
+  api:
     build:
       context: .
-      dockerfile: ../src/HRTech.WebApi/Dockerfile
+      dockerfile: src/HRTech.WebApi/Dockerfile
     ports:
       - 80:80
+    volumes:
+      - /app/StaticFiles/Images/
+    network_mode: bridge
+
   MySqlDb:
     image: mysql:latest
     container_name: db
@@ -15,11 +20,12 @@ services:
       MYSQL_DATABASE: HRTechDb
       MYSQL_USER: db_user
       MYSQL_PASSWORD: password
-    ports: 
+    ports:
       - "6033:3306"
     restart: unless-stopped
     volumes:
       - ./data/db:/var/lib/mysql
+    network_mode: bridge
   seq:
     image: datalust/seq:latest
     container_name: seq
@@ -30,7 +36,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./data/seq:/data
-  
+    network_mode: bridge
+
   rabbitmq:
     image: rabbitmq:3.9-management
     ports:

@@ -3,14 +3,16 @@ using System;
 using HRTech.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HRTech.Infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20211122123033_AddEvaluationComments1")]
+    partial class AddEvaluationComments1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,16 +219,10 @@ namespace HRTech.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("CurrentGradeId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("DateOfEvaluation")
                         .HasColumnType("datetime(6)");
 
                     b.Property<int>("EvaluationState")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NextGradeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -238,10 +234,6 @@ namespace HRTech.Infrastructure.Migrations
                     b.HasIndex("ApplicationUserIdExpertHardSkills");
 
                     b.HasIndex("ApplicationUserIdExpertSoftSkills");
-
-                    b.HasIndex("CurrentGradeId");
-
-                    b.HasIndex("NextGradeId");
 
                     b.ToTable("Evaluations");
                 });
@@ -573,14 +565,6 @@ namespace HRTech.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("ApplicationUserIdExpertSoftSkills");
 
-                    b.HasOne("HRTech.Domain.Grade", "CurrentGrade")
-                        .WithMany()
-                        .HasForeignKey("CurrentGradeId");
-
-                    b.HasOne("HRTech.Domain.Grade", "NextGrade")
-                        .WithMany()
-                        .HasForeignKey("NextGradeId");
-
                     b.Navigation("ApplicationUserExpertEnglishSkills");
 
                     b.Navigation("ApplicationUserExpertHardSkills");
@@ -588,10 +572,6 @@ namespace HRTech.Infrastructure.Migrations
                     b.Navigation("ApplicationUserExpertSoftSkills");
 
                     b.Navigation("ApplicationUsers");
-
-                    b.Navigation("CurrentGrade");
-
-                    b.Navigation("NextGrade");
                 });
 
             modelBuilder.Entity("HRTech.Domain.Grade", b =>

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Enums;
 using HRTech.Domain;
 using HRTech.WebApi.Models.User;
 
@@ -31,6 +32,8 @@ namespace HRTech.WebApi.Mapping
                 .ForMember(dest => dest.Grades, opt => opt.Ignore())
                 .ForMember(dest => dest.GradeId, opt => opt.Ignore())
                 .ForMember(dest => dest.Company, opt => opt.Ignore())
+                .ForMember(dest => dest.Comments, opt => opt.Ignore())
+                .ForMember(dest => dest.ExpertUserState, opt => opt.MapFrom(m=>ExpertUserState.None))
                 .ForMember(dest => dest.CompanyId, opt => opt.MapFrom(src=>src.CompanyId));
         }
     }

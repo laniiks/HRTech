@@ -39,7 +39,8 @@ namespace HRTech.Infrastructure.UsersFromExcelFile
                             Email = reader.GetValue(3).ToString(),
                             PhoneNumber = reader.GetValue(4).ToString(),
                             CompanyId = companyId,
-                            Password = _generatePassword.GeneratePassword()
+                            Password = _generatePassword.GeneratePassword(),
+                            ExpertUserState = reader.GetValue(5).ToString()
                         });
                     }
                     else

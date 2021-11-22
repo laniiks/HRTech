@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Common.Enums;
 using Common.HtmlMessage;
 using HRTech.Application.Abstractions;
 using HRTech.Application.Common;
@@ -119,8 +120,6 @@ namespace HRTech.Application.Services.User.Implementations
         public async Task<ICollection<IdentityResult>> CreateRange(List<RegisterDto> users)
         {
             ICollection<IdentityResult> result = null;
-
-
             foreach (var value in users)
             {
                 var dto = new ApplicationUser
@@ -132,7 +131,8 @@ namespace HRTech.Application.Services.User.Implementations
                     //Password = value.Password,
                     PhoneNumber = value.PhoneNumber,
                     CompanyId = value.CompanyId,
-                    UserName = value.Email
+                    UserName = value.Email,
+                    ExpertUserState = (ExpertUserState)Int16.Parse(value.ExpertUserState)
                 };
                 result = new[] {await Create(dto, value.Password)};
             }

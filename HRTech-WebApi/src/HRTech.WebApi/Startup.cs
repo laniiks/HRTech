@@ -6,10 +6,14 @@ using HRTech.Application.Abstractions;
 using HRTech.Application.Mapping;
 using HRTech.Application.Services.Address.Implementations;
 using HRTech.Application.Services.Address.Interfaces;
+using HRTech.Application.Services.Comment.Implementations;
+using HRTech.Application.Services.Comment.Interfaces;
 using HRTech.Application.Services.Company.Implementations;
 using HRTech.Application.Services.Company.Interfaces;
 using HRTech.Application.Services.CompanyExelFileUsers.Implementations;
 using HRTech.Application.Services.CompanyExelFileUsers.Interfaces;
+using HRTech.Application.Services.Evaluation.Implementations;
+using HRTech.Application.Services.Evaluation.Interfaces;
 using HRTech.Application.Services.Grade.Implementations;
 using HRTech.Application.Services.Grade.Interfaces;
 using HRTech.Application.Services.Mail.Interfaces;
@@ -66,6 +70,11 @@ namespace HRTech.WebApi
 
                 conf.UsingRabbitMq((context, c) =>
                 {
+                    // c.Host("host.docker.internal", host =>
+                    // {
+                    //     host.Username("guest");
+                    //     host.Password("guest");
+                    // });
                     c.Host("localhost", host =>
                     {
                         host.Username("guest");
@@ -128,6 +137,8 @@ namespace HRTech.WebApi
                 .AddTransient<IPersonalDeveloperPlanService, PersonalDeveloperPlanService>()
                 .AddTransient<ITemplateFileService, TemplateFileService>()
                 .AddTransient<IGradeService, GradeService>()
+                .AddTransient<IEvaluationService, EvaluationService>()
+                .AddTransient<ICommentService, CommentService>()
 
                 //Repositories
                 .AddTransient<ICompanyRepository, CompanyRepository>()
@@ -137,7 +148,9 @@ namespace HRTech.WebApi
                 .AddTransient<IRepository<Address>, BaseRepository<Address>>()
                 .AddTransient<IGradeRepository, GradeRepository>()
                 .AddTransient<IRepository<FileTemplate>, BaseRepository<FileTemplate>>()
+                .AddTransient<IEvaluationRepository, EvaluationRepository>()
                 .AddScoped<IRepository<ApplicationUser>, BaseRepository<ApplicationUser>>()
+                .AddTransient<IRepository<Comment>, BaseRepository<Comment>>()
 
                 
                 //Infrastructure
@@ -211,6 +224,8 @@ namespace HRTech.WebApi
                 cfg.AddProfile<PersonalDevelopmentPlanProfile>();
                 cfg.AddProfile<GradeProfile>();
                 cfg.AddProfile<FileTemplateProfile>();
+                cfg.AddProfile<CommentProfile>();
+                //cfg.AddProfile<EvaluationProfile>();
             });
             configuration.AssertConfigurationIsValid();
             return configuration;

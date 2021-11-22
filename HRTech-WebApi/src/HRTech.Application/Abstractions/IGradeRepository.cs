@@ -9,5 +9,6 @@ namespace HRTech.Application.Abstractions
     public interface IGradeRepository : IRepository<Grade>
     {
         Task<ICollection<Grade>> GetAllGradeInCompany(Guid companyId, CancellationToken cancellationToken);
+        Task<Grade> GetNextGrade(Guid companyId, int currentGradeId, CancellationToken cancellationToken);
     }
 }

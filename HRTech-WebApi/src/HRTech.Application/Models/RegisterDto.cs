@@ -1,4 +1,5 @@
 ﻿using System;
+using Common.Enums;
 
 namespace HRTech.Application.Models
 {
@@ -11,5 +12,6 @@ namespace HRTech.Application.Models
         public string PhoneNumber { get; set; }
         public string Password { get; set; }
         public Guid CompanyId { get; set; }
+        public string? ExpertUserState { get; set; }
     }
 }
