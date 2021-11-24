@@ -3,14 +3,16 @@ using System;
 using HRTech.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HRTech.Infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20211123231753_AddSuccessEvaluation")]
+    partial class AddSuccessEvaluation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,20 +225,20 @@ namespace HRTech.Infrastructure.Migrations
                     b.Property<DateTime>("DateOfEvaluation")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("EnglishSkillSuccess")
-                        .HasColumnType("int");
+                    b.Property<bool>("EnglishSkillSuccess")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("EvaluationState")
                         .HasColumnType("int");
 
-                    b.Property<int>("HardSkillSuccess")
-                        .HasColumnType("int");
+                    b.Property<bool>("HardSkillSuccess")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int?>("NextGradeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SoftSkillSuccess")
-                        .HasColumnType("int");
+                    b.Property<bool>("SoftSkillSuccess")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 

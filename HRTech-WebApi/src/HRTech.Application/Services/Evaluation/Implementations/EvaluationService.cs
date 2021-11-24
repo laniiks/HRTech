@@ -16,12 +16,17 @@ namespace HRTech.Application.Services.Evaluation.Implementations
         private readonly IMapper _mapper;
         private readonly IEvaluationRepository _evaluationRepository;
         private readonly IGradeRepository _gradeRepository;
+        private readonly IApplicationUserRepository _applicationUserRepository;
 
-        public EvaluationService(IMapper mapper, IEvaluationRepository evaluationRepository, IGradeRepository gradeRepository)
+        public EvaluationService(IMapper mapper, 
+            IEvaluationRepository evaluationRepository, 
+            IGradeRepository gradeRepository, 
+            IApplicationUserRepository applicationUserRepository)
         {
             _mapper = mapper;
             _evaluationRepository = evaluationRepository;
             _gradeRepository = gradeRepository;
+            _applicationUserRepository = applicationUserRepository;
         }
 
 
@@ -89,7 +94,11 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                     NextGrade = evaluation.NextGrade != null ? new GradeDto
                     {
                         Title = evaluation.NextGrade.Title
-                    } : new GradeDto()
+                    } : new GradeDto(),
+                    SoftSkillSuccess = evaluation.SoftSkillSuccess,
+                    HardSkillSuccess = evaluation.HardSkillSuccess,
+                    EnglishSkillSuccess = evaluation.EnglishSkillSuccess,
+
             };
         }
 
@@ -158,7 +167,10 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                     NextGrade = eva.NextGrade != null ? new GradeDto
                     {
                         Title = eva.NextGrade.Title
-                    } : new GradeDto()
+                    } : new GradeDto(),
+                    SoftSkillSuccess = eva.SoftSkillSuccess,
+                    HardSkillSuccess = eva.HardSkillSuccess,
+                    EnglishSkillSuccess = eva.EnglishSkillSuccess,
                 })
             };
         }
@@ -228,7 +240,10 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                     NextGrade = eva.NextGrade != null ? new GradeDto
                     {
                         Title = eva.NextGrade.Title
-                    } : new GradeDto()
+                    } : new GradeDto(),
+                    SoftSkillSuccess = eva.SoftSkillSuccess,
+                    HardSkillSuccess = eva.HardSkillSuccess,
+                    EnglishSkillSuccess = eva.EnglishSkillSuccess,
                 })
             };
         }
@@ -236,12 +251,18 @@ namespace HRTech.Application.Services.Evaluation.Implementations
         public async Task<Guid> CreateEvaluation(EvaluationDto evaluationDto, ApplicationUser user,
             CancellationToken cancellationToken)
         {
-            Domain.Grade grade = null;
             Domain.Evaluation evaluation = null;
             if (user.CompanyId != null && user.GradeId != null)
             {
-                grade = await _gradeRepository.GetNextGrade((Guid) user.CompanyId, (int) user.GradeId,
+                var grade = await _gradeRepository.GetNextGrade((Guid) user.CompanyId, (int) user.GradeId,
                         cancellationToken);
+                if (grade == null)
+                {
+                    grade = new Domain.Grade
+                    {
+                        Id = (int) user.GradeId
+                    };
+                }
                 evaluation = new Domain.Evaluation
                 {
                     CreatedDateTime = DateTime.UtcNow,
@@ -259,6 +280,117 @@ namespace HRTech.Application.Services.Evaluation.Implementations
             await _evaluationRepository.Add(evaluation, cancellationToken);
             await _evaluationRepository.SaveChanges(cancellationToken);
             return evaluation.Id;
+        }
+
+        public async Task<Guid> SoftSkillSuccess(Guid evaluationId, EvaluationSuccessState skillSuccess, ApplicationUser user, CancellationToken cancellationToken)
+        {
+            var evaluation = await _evaluationRepository.GetByIdGuid(evaluationId);
+            if (evaluation.ApplicationUserIdExpertSoftSkills != user.Id)
+            {
+                throw new Exception("Вы не являетесь экспертом Soft Skill");
+            }
+            evaluation.SoftSkillSuccess = skillSuccess;
+            if (evaluation.EvaluationState == EvaluationState.New)
+            {
+                evaluation.EvaluationState = EvaluationState.InProgress;
+            }
+            
+            if (evaluation.EvaluationState == EvaluationState.InProgress)
+            {
+                evaluation.EvaluationState = CheckSuccessEvaluationAndChangeState(evaluation);
+            }            
+            await _evaluationRepository.Update(evaluation, cancellationToken);
+            await _evaluationRepository.SaveChanges(cancellationToken);
+            
+            if (evaluation.EvaluationState == EvaluationState.Passed)
+            {
+                user.GradeId = evaluation.NextGradeId;
+                await _applicationUserRepository.Update(user, cancellationToken);
+                await _applicationUserRepository.SaveChanges(cancellationToken);
+            }
+            
+            return evaluation.Id;
+        }
+        
+        public async Task<Guid> HardSkillSuccess(Guid evaluationId, EvaluationSuccessState skillSuccess, ApplicationUser user, CancellationToken cancellationToken)
+        {
+            var evaluation = await _evaluationRepository.GetByIdGuid(evaluationId);
+            if (evaluation.ApplicationUserIdExpertHardSkills != user.Id)
+            {
+                throw new Exception("Вы не являетесь экспертом Hard Skill");
+            }
+            evaluation.HardSkillSuccess = skillSuccess;
+            if (evaluation.EvaluationState == EvaluationState.New)
+            {
+                evaluation.EvaluationState = EvaluationState.InProgress;
+            }
+            
+            if (evaluation.EvaluationState == EvaluationState.InProgress)
+            {
+                evaluation.EvaluationState = CheckSuccessEvaluationAndChangeState(evaluation);
+            }
+
+            
+            await _evaluationRepository.Update(evaluation, cancellationToken);
+            await _evaluationRepository.SaveChanges(cancellationToken);
+            
+            if (evaluation.EvaluationState == EvaluationState.Passed)
+            {
+                user.GradeId = evaluation.NextGradeId;
+                await _applicationUserRepository.Update(user, cancellationToken);
+                await _applicationUserRepository.SaveChanges(cancellationToken);
+            }
+            return evaluation.Id;        
+        }
+
+        public async Task<Guid> EnglishSkillSuccess(Guid evaluationId, EvaluationSuccessState skillSuccess, ApplicationUser user, CancellationToken cancellationToken)
+        {
+            var evaluation = await _evaluationRepository.GetByIdGuid(evaluationId);
+            if (evaluation.ApplicationUserIdExpertEnglishSkills != user.Id)
+            {
+                throw new Exception("Вы не являетесь экспертом English");
+            }
+            evaluation.EnglishSkillSuccess = skillSuccess;
+            if (evaluation.EvaluationState == EvaluationState.New)
+            {
+                evaluation.EvaluationState = EvaluationState.InProgress;
+            }
+
+            if (evaluation.EvaluationState == EvaluationState.InProgress)
+            {
+                evaluation.EvaluationState = CheckSuccessEvaluationAndChangeState(evaluation);
+            }
+            
+            await _evaluationRepository.Update(evaluation, cancellationToken);
+            await _evaluationRepository.SaveChanges(cancellationToken);
+            
+            if (evaluation.EvaluationState == EvaluationState.Passed)
+            {
+                user.GradeId = evaluation.NextGradeId;
+                await _applicationUserRepository.Update(user, cancellationToken);
+                await _applicationUserRepository.SaveChanges(cancellationToken);
+            }
+            
+            return evaluation.Id;        
+        }
+        
+        private EvaluationState CheckSuccessEvaluationAndChangeState(Domain.Evaluation evaluation)
+        {
+            if (evaluation.SoftSkillSuccess == EvaluationSuccessState.Success &&
+                evaluation.HardSkillSuccess == EvaluationSuccessState.Success &&
+                evaluation.EnglishSkillSuccess == EvaluationSuccessState.Success)
+            {
+                return EvaluationState.Passed;
+            }
+
+            if (evaluation.SoftSkillSuccess == EvaluationSuccessState.Canceled ||
+                evaluation.HardSkillSuccess == EvaluationSuccessState.Canceled ||
+                evaluation.EnglishSkillSuccess == EvaluationSuccessState.Canceled)
+            {
+                return EvaluationState.Canceled;
+            }
+
+            return evaluation.EvaluationState;
         }
     }
 }

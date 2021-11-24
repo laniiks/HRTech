@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.Enums;
 using HRTech.Application.Models;
 using HRTech.Domain;
 using Microsoft.AspNetCore.Identity;
@@ -20,5 +22,8 @@ namespace HRTech.Application.Services.User.Interfaces
 
         Task<List<Claim>> GetValidClaims(ApplicationUser user);
         Task<int> UpdateGrade(ApplicationUser user, int idGrade, CancellationToken cancellationToken);
+
+        Task<ICollection<ApplicationUser>> GetAllExpertUserInCompany(string userId, Guid companyId, ExpertUserState expertUserState,
+            CancellationToken cancellationToken);
     }
 }

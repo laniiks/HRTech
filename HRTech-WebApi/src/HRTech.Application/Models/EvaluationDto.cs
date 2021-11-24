@@ -26,6 +26,9 @@ namespace HRTech.Application.Models
         public int? NextGradeId { get; set; }
         public virtual GradeDto NextGrade { get; set; }
 
+        public EvaluationSuccessState SoftSkillSuccess { get; set; }
+        public EvaluationSuccessState HardSkillSuccess { get; set; }
+        public EvaluationSuccessState EnglishSkillSuccess { get; set; }
     }
     
 }

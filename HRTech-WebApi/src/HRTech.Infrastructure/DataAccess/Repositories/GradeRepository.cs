@@ -28,7 +28,7 @@ namespace HRTech.Infrastructure.DataAccess.Repositories
             return await _databaseContext.Grades
                 .Where(x => x.CompanyId == companyId && x.Id > currentGradeId)
                 .OrderBy(x => x.Id)
-                .FirstAsync(cancellationToken);
+                .FirstOrDefaultAsync(cancellationToken);
             // return await _databaseContext.Grades
             //     .Where(x => x.CompanyId == companyId)
             //     .SkipWhile(i => i.Id != currentGradeId).Skip(1).FirstOrDefaultAsync(cancellationToken);

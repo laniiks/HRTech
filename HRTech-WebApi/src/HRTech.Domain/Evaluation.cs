@@ -36,6 +36,10 @@ namespace HRTech.Domain
         public int? NextGradeId { get; set; }
         [ForeignKey("NextGradeId")]
         public virtual Grade NextGrade { get; set; }
+        
+        public EvaluationSuccessState SoftSkillSuccess { get; set; }
+        public EvaluationSuccessState HardSkillSuccess { get; set; }
+        public EvaluationSuccessState EnglishSkillSuccess { get; set; }
 
     }
 }

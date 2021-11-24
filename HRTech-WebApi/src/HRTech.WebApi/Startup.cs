@@ -149,10 +149,9 @@ namespace HRTech.WebApi
                 .AddTransient<IGradeRepository, GradeRepository>()
                 .AddTransient<IRepository<FileTemplate>, BaseRepository<FileTemplate>>()
                 .AddTransient<IEvaluationRepository, EvaluationRepository>()
-                .AddScoped<IRepository<ApplicationUser>, BaseRepository<ApplicationUser>>()
+                .AddTransient<IApplicationUserRepository, ApplicationUserRepository>()
                 .AddTransient<IRepository<Comment>, BaseRepository<Comment>>()
 
-                
                 //Infrastructure
                 .AddTransient<IGetUsersFromExcelFile, GetUsersFromExcelFile>()
                 .AddTransient<IGeneratePassword, GeneratePassword>()

@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Common.Enums;
 using HRTech.Application.Models;
 using HRTech.Application.Services.Evaluation.Interfaces;
 using HRTech.Domain;
@@ -36,10 +37,11 @@ namespace HRTech.WebApi.Controllers.Evaluation
             var evaluation = new EvaluationDto
             {
                 DateOfEvaluation = createEvaluationRequest.DateOfEvaluation,
-                ApplicationUserId = createEvaluationRequest.ApplicationUserId,
                 ApplicationUserIdExpertSoftSkills = createEvaluationRequest.ApplicationUserIdExpertSoftSkills,
                 ApplicationUserIdExpertHardSkills = createEvaluationRequest.ApplicationUserIdExpertHardSkills,
-                ApplicationUserIdExpertEnglishSkills = createEvaluationRequest.ApplicationUserIdExpertEnglishSkills
+                ApplicationUserIdExpertEnglishSkills = createEvaluationRequest.ApplicationUserIdExpertEnglishSkills,
+                EvaluationState = EvaluationState.New,
+                CreatedDateTime = DateTime.UtcNow
             };
             var result = await _evaluationService.CreateEvaluation(evaluation, await GetCurrentUser(),
                 cancellationToken);
@@ -65,6 +67,29 @@ namespace HRTech.WebApi.Controllers.Evaluation
             var result = await _evaluationService.GetAllResponseEvaluationForExpertUser(await GetCurrentUser(), cancellationToken);
             return Ok(result);
         }
+
+        [HttpPut("SuccessEvaluationSoftSkill")]
+        public async Task<IActionResult> SuccessEvaluationSoftSkill(Guid evaluationId, EvaluationSuccessState skillSuccess,
+            CancellationToken cancellationToken)
+        {
+            var result = await _evaluationService.SoftSkillSuccess(evaluationId, skillSuccess, await GetCurrentUser(), cancellationToken);
+            return Ok(result);
+        }
         
+        [HttpPut("SuccessEvaluationHardSkill")]
+        public async Task<IActionResult> SuccessEvaluationHardSkill(Guid evaluationId, EvaluationSuccessState skillSuccess,
+            CancellationToken cancellationToken)
+        {
+            var result = await _evaluationService.HardSkillSuccess(evaluationId, skillSuccess, await GetCurrentUser(), cancellationToken);
+            return Ok(result);
+        }
+        
+        [HttpPut("SuccessEvaluationEnglishSkill")]
+        public async Task<IActionResult> SuccessEvaluationEnglishSkill(Guid evaluationId, EvaluationSuccessState skillSuccess,
+            CancellationToken cancellationToken)
+        {
+            var result = await _evaluationService.EnglishSkillSuccess(evaluationId, skillSuccess, await GetCurrentUser(), cancellationToken);
+            return Ok(result);
+        }
     }
 }
