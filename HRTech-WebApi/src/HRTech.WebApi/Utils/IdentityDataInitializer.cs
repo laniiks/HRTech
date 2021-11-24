@@ -1,4 +1,5 @@
 ﻿using System;
+using Common.Enums;
 using HRTech.Application.Common;
 using HRTech.Domain;
 using Microsoft.AspNetCore.Identity;
@@ -17,7 +18,7 @@ namespace HRTech.WebApi.Utils
         {
             if (userManager.FindByNameAsync("admin").Result == null)
             {
-                var user = new ApplicationUser { UserName = "admin@test.ru", Email = "admin@test.ru", FirstName = "Ivan", LastName = "Ivanov"};
+                var user = new ApplicationUser { UserName = "admin@test.ru", Email = "admin@test.ru", FirstName = "Ivan", LastName = "Ivanov", ExpertUserState = ExpertUserState.None};
                 var result = userManager.CreateAsync(user, "adminA1+").Result;
 
                 if (result.Succeeded)
@@ -28,7 +29,7 @@ namespace HRTech.WebApi.Utils
 
             if (userManager.FindByNameAsync("user").Result == null)
             {
-                var user = new ApplicationUser { UserName = "user@test.ru", Email = "user@test.ru", FirstName = "Piter", LastName = "Petrov"};
+                var user = new ApplicationUser { UserName = "user@test.ru", Email = "user@test.ru", FirstName = "Piter", LastName = "Petrov", ExpertUserState = ExpertUserState.None};
                 var result = userManager.CreateAsync(user, "P@ssw0rd1!").Result;
 
                 if (result.Succeeded)

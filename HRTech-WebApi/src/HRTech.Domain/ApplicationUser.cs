@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace HRTech.Domain
@@ -16,7 +17,9 @@ namespace HRTech.Domain
         
         public int? GradeId { get; set; }
         public virtual Grade Grades { get; set; }
-        
+        public ExpertUserState ExpertUserState { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
+
         // public virtual Image Photo { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Common.Enums;
 using Common.HtmlMessage;
 using HRTech.Application.Abstractions;
 using HRTech.Application.Common;
@@ -27,15 +28,15 @@ namespace HRTech.Application.Services.User.Implementations
         private readonly IMapper _mapper;
         private readonly ISendEndpointProvider _sendEndpointProvider;
         private readonly HtmlMessage _htmlMessage;
-        private readonly IRepository<ApplicationUser> _repository;
         private readonly IGradeRepository _gradeRepository;
+        private readonly IApplicationUserRepository _applicationUserRepository;
 
 
         public UserService(
             UserManager<ApplicationUser> userManager, 
             SignInManager<ApplicationUser> signInManager, 
             RoleManager<IdentityRole> roleManager, 
-            ILogger<UserService> logger, IMapper mapper, ISendEndpointProvider sendEndpointProvider, HtmlMessage htmlMessage, IRepository<ApplicationUser> repository, IGradeRepository gradeRepository)
+            ILogger<UserService> logger, IMapper mapper, ISendEndpointProvider sendEndpointProvider, HtmlMessage htmlMessage, IGradeRepository gradeRepository, IApplicationUserRepository applicationUserRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -44,8 +45,8 @@ namespace HRTech.Application.Services.User.Implementations
             _mapper = mapper;
             _sendEndpointProvider = sendEndpointProvider;
             _htmlMessage = htmlMessage;
-            _repository = repository;
             _gradeRepository = gradeRepository;
+            _applicationUserRepository = applicationUserRepository;
         }
 
         public async Task<ApplicationUser> GetUserByEmail(string email)
@@ -119,8 +120,6 @@ namespace HRTech.Application.Services.User.Implementations
         public async Task<ICollection<IdentityResult>> CreateRange(List<RegisterDto> users)
         {
             ICollection<IdentityResult> result = null;
-
-
             foreach (var value in users)
             {
                 var dto = new ApplicationUser
@@ -132,7 +131,8 @@ namespace HRTech.Application.Services.User.Implementations
                     //Password = value.Password,
                     PhoneNumber = value.PhoneNumber,
                     CompanyId = value.CompanyId,
-                    UserName = value.Email
+                    UserName = value.Email,
+                    ExpertUserState = (ExpertUserState)Int16.Parse(value.ExpertUserState)
                 };
                 result = new[] {await Create(dto, value.Password)};
             }
@@ -176,6 +176,20 @@ namespace HRTech.Application.Services.User.Implementations
             users.GradeId = idGrade;
             await _userManager.UpdateAsync(users);
             return idGrade;
+        }
+
+        public async Task<ICollection<ApplicationUser>> GetAllExpertUserInCompany(string userId, Guid companyId,
+            ExpertUserState expertUserState, CancellationToken cancellationToken)
+        {
+            var us = await _applicationUserRepository.GetAllExpertUserInCompany(userId, companyId, expertUserState,
+                cancellationToken);
+            var users = _mapper.Map<ICollection<UserDto>>(us);
+            if (users == null)
+            {
+                throw new Exception("Не найдено");
+            }
+
+            return _mapper.Map<ICollection<ApplicationUser>>(users);
         }
     }
 }

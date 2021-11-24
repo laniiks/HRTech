@@ -17,6 +17,8 @@ namespace HRTech.Infrastructure.DataAccess
         public DbSet<Grade> Grades { get; set; }
         public DbSet<FileTemplate> FileTemplates { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Evaluation> Evaluations { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var config = new ConfigurationBuilder()

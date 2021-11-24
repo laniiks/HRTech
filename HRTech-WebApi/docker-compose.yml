@@ -1,0 +1,55 @@
+version: "3.7"
+
+services:
+
+  api:
+    build:
+      context: .
+      dockerfile: src/HRTech.WebApi/Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - /app/StaticFiles/Images/
+    network_mode: bridge
+
+  MySqlDb:
+    image: mysql:latest
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: my_secret_password
+      MYSQL_DATABASE: HRTechDb
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: password
+    ports:
+      - "6033:3306"
+    restart: unless-stopped
+    volumes:
+      - ./data/db:/var/lib/mysql
+    network_mode: bridge
+  seq:
+    image: datalust/seq:latest
+    container_name: seq
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5341:80"
+    restart: unless-stopped
+    volumes:
+      - ./data/seq:/data
+    network_mode: bridge
+
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      AMQP_URL: 'amqp://rabbitmq?connection_attempts=5&retry_delay=5'
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+    restart: unless-stopped
+    networks:
+      - rabbitmq_go_net
+networks:
+  rabbitmq_go_net:
+    driver: bridge

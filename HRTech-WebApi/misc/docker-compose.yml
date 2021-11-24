@@ -1,6 +1,12 @@
 ﻿version: "3.7"
 
-services: 
+services:
+  webapi:
+    build:
+      context: .
+      dockerfile: ../src/HRTech.WebApi/Dockerfile
+    ports:
+      - 80:80
   MySqlDb:
     image: mysql:latest
     container_name: db
