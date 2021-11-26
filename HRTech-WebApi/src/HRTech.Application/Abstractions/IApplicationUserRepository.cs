@@ -11,5 +11,7 @@ namespace HRTech.Application.Abstractions
     {
         Task<ICollection<ApplicationUser>> GetAllExpertUserInCompany(string userId, Guid companyId, ExpertUserState expertUserState,
             CancellationToken cancellationToken);
+
+        Task<ICollection<ApplicationUser>> GetAllUserInCompany(Guid companyId, CancellationToken cancellationToken);
     }
 }

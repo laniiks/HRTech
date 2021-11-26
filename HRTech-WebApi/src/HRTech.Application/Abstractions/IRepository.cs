@@ -9,6 +9,7 @@ namespace HRTech.Application.Abstractions
     {
         Task<T> GetById(int id, CancellationToken cancellationToken);
         Task<T> GetByIdGuid(Guid id);
+        Task<T> GetById(string id);
 
         Task<ICollection<T>> GetAll(CancellationToken cancellationToken);
         Task<int> GetCount(CancellationToken cancellationToken);

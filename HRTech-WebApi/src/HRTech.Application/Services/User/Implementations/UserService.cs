@@ -10,6 +10,7 @@ using Common.HtmlMessage;
 using HRTech.Application.Abstractions;
 using HRTech.Application.Common;
 using HRTech.Application.Models;
+using HRTech.Application.Services.Evaluation.Interfaces;
 using HRTech.Application.Services.User.Contracts;
 using HRTech.Application.Services.User.Interfaces;
 using HRTech.Domain;
@@ -30,13 +31,14 @@ namespace HRTech.Application.Services.User.Implementations
         private readonly HtmlMessage _htmlMessage;
         private readonly IGradeRepository _gradeRepository;
         private readonly IApplicationUserRepository _applicationUserRepository;
+        private readonly IRepository<Image> _imageRepository;
 
 
         public UserService(
             UserManager<ApplicationUser> userManager, 
             SignInManager<ApplicationUser> signInManager, 
             RoleManager<IdentityRole> roleManager, 
-            ILogger<UserService> logger, IMapper mapper, ISendEndpointProvider sendEndpointProvider, HtmlMessage htmlMessage, IGradeRepository gradeRepository, IApplicationUserRepository applicationUserRepository)
+            ILogger<UserService> logger, IMapper mapper, ISendEndpointProvider sendEndpointProvider, HtmlMessage htmlMessage, IGradeRepository gradeRepository, IApplicationUserRepository applicationUserRepository, IRepository<Image> imageRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -47,6 +49,7 @@ namespace HRTech.Application.Services.User.Implementations
             _htmlMessage = htmlMessage;
             _gradeRepository = gradeRepository;
             _applicationUserRepository = applicationUserRepository;
+            _imageRepository = imageRepository;
         }
 
         public async Task<ApplicationUser> GetUserByEmail(string email)
@@ -132,7 +135,8 @@ namespace HRTech.Application.Services.User.Implementations
                     PhoneNumber = value.PhoneNumber,
                     CompanyId = value.CompanyId,
                     UserName = value.Email,
-                    ExpertUserState = (ExpertUserState)Int16.Parse(value.ExpertUserState)
+                    ExpertUserState = (ExpertUserState)Int16.Parse(value.ExpertUserState),
+                    IsDirector = ParseBool(value.IsDirector)
                 };
                 result = new[] {await Create(dto, value.Password)};
             }
@@ -140,6 +144,19 @@ namespace HRTech.Application.Services.User.Implementations
             return result;
         }
 
+        private bool ParseBool(string input)
+        {
+            switch (input.ToLower())
+            {
+                case "1":
+                case "y":
+                case "yes":
+                case "true":
+                    return true;
+                default:
+                    return false;
+            }
+        }
         public async Task<List<Claim>> GetValidClaims(ApplicationUser user)
         {
             var options = new IdentityOptions();
@@ -190,6 +207,53 @@ namespace HRTech.Application.Services.User.Implementations
             }
 
             return _mapper.Map<ICollection<ApplicationUser>>(users);
+        }
+
+        public async Task<bool> IsDirector(ApplicationUser applicationUser, Guid companyId, CancellationToken cancellationToken)
+        {
+            var user = await _applicationUserRepository.GetById(applicationUser.Id);
+
+            if (user.IsDirector && user.CompanyId == companyId)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<string> AddPhotoUser(ApplicationUser user, FileDto fileDto, CancellationToken cancellationToken)
+        {
+            var photo = _mapper.Map<Image>(fileDto);
+            photo.CompanyId = null;
+            var us = await _applicationUserRepository.GetById(user.Id);
+            if (us == null)
+            {
+                throw new Exception("Пользователь не найден");
+            }
+
+            if (user.Photo != null)
+            {
+                await _imageRepository.Delete(user.Photo, cancellationToken);
+            }
+            us.Photo = photo;
+            await _imageRepository.Add(photo, cancellationToken);
+            await _applicationUserRepository.Update(us, cancellationToken);
+            await _imageRepository.SaveChanges(cancellationToken);
+            await _applicationUserRepository.SaveChanges(cancellationToken);
+
+            return us.Id;
+        }
+
+        public async Task<ICollection<ApplicationUser>> GetAllUserInCompany(Guid companyId, CancellationToken cancellationToken)
+        {
+            var us = await _applicationUserRepository.GetAllUserInCompany(companyId,
+                cancellationToken);
+            var users = _mapper.Map<ICollection<UserDto>>(us);
+            if (users == null)
+            {
+                throw new Exception("Не найдено");
+            }
+
+            return _mapper.Map<ICollection<ApplicationUser>>(users);        
         }
     }
 }

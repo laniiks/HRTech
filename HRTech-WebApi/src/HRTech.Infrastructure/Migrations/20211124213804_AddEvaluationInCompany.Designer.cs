@@ -3,14 +3,16 @@ using System;
 using HRTech.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HRTech.Infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20211124213804_AddEvaluationInCompany")]
+    partial class AddEvaluationInCompany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -337,10 +339,7 @@ namespace HRTech.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<Guid?>("CompanyId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("char(36)");
 
                     b.Property<byte[]>("Content")
@@ -359,9 +358,6 @@ namespace HRTech.Infrastructure.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId")
-                        .IsUnique();
 
                     b.HasIndex("CompanyId")
                         .IsUnique();
@@ -636,15 +632,11 @@ namespace HRTech.Infrastructure.Migrations
 
             modelBuilder.Entity("HRTech.Domain.Image", b =>
                 {
-                    b.HasOne("HRTech.Domain.ApplicationUser", "ApplicationUser")
-                        .WithOne("Photo")
-                        .HasForeignKey("HRTech.Domain.Image", "ApplicationUserId");
-
                     b.HasOne("HRTech.Domain.Company", "Company")
                         .WithOne("Image")
-                        .HasForeignKey("HRTech.Domain.Image", "CompanyId");
-
-                    b.Navigation("ApplicationUser");
+                        .HasForeignKey("HRTech.Domain.Image", "CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Company");
                 });
@@ -719,8 +711,6 @@ namespace HRTech.Infrastructure.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("PersonalDevelopmentPlans");
-
-                    b.Navigation("Photo");
                 });
 
             modelBuilder.Entity("HRTech.Domain.Company", b =>

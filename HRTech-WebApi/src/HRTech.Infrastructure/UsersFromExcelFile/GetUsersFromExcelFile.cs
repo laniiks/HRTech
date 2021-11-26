@@ -40,7 +40,8 @@ namespace HRTech.Infrastructure.UsersFromExcelFile
                             PhoneNumber = reader.GetValue(4).ToString(),
                             CompanyId = companyId,
                             Password = _generatePassword.GeneratePassword(),
-                            ExpertUserState = reader.GetValue(5).ToString()
+                            ExpertUserState = reader.GetValue(5).ToString(),
+                            IsDirector = reader.GetValue(6).ToString()
                         });
                     }
                     else

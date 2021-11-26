@@ -86,6 +86,13 @@ namespace HRTech.WebApi.Controllers.Company
             var result = await _companyExcelFileUsers.AddFileExcelUsersInCompany(id, file, cancellationToken);
             return Ok(result);
         }
-
+        
+        [HttpDelete("RejectCompany/{companyId}")]
+        public async Task<IActionResult> RejectCompany(Guid companyId)
+        {
+            var result = await _companyService.RejectCompany(companyId, CancellationToken.None);
+            return Ok(result);
+        }
+        
     }
 }

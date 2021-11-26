@@ -16,5 +16,6 @@ namespace HRTech.Domain
         public virtual Address Address { get; set; }
         public virtual ExcelFileUsers ExcelFileUsers { get; set; }
         public virtual ICollection<Grade> GradesCollection { get; set; }
+        public virtual ICollection<Evaluation> Evaluations { get; set; }
     }
 }

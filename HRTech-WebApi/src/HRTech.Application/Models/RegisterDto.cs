@@ -13,5 +13,7 @@ namespace HRTech.Application.Models
         public string Password { get; set; }
         public Guid CompanyId { get; set; }
         public string? ExpertUserState { get; set; }
+        public string IsDirector { get; set; }
+
     }
 }

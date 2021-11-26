@@ -6,6 +6,7 @@ using Common.Enums;
 using HRTech.Application.Services.User.Interfaces;
 using HRTech.Domain;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,6 +34,28 @@ namespace HRTech.WebApi.Controllers.User
         {
             var user = await GetCurrentUser();
             var result = await _userService.GetAllExpertUserInCompany(user.Id, companyId, expertUserState, cancellationToken);
+            return Ok(result);
+        }
+        [HttpGet("GetAllUserInCompany")]
+        public async Task<IActionResult> GetAllExpertUserInCompany(Guid companyId,
+            CancellationToken cancellationToken)
+        {
+            var result = await _userService.GetAllUserInCompany(companyId, cancellationToken);
+            return Ok(result);
+        }
+
+        [HttpGet("IsDirector")]
+        public async Task<IActionResult> IsDirector(Guid companyId, CancellationToken cancellationToken)
+        {
+            var result = await _userService.IsDirector(await GetCurrentUser(), companyId, cancellationToken);
+            return Ok(result);
+        }
+
+        [HttpPost("AddPhotoUser")]
+        public async Task<IActionResult> AddPhotoUser(IFormFile photo, CancellationToken cancellationToken)
+        {
+            var file = GetFileInfo(photo);
+            var result = await _userService.AddPhotoUser(await GetCurrentUser(), file, cancellationToken);
             return Ok(result);
         }
     }

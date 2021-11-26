@@ -10,7 +10,8 @@ namespace HRTech.Application.Mapping
         public ExcelFileUsersProfile()
         {
             CreateMap<ExcelFileUsers, FileDto>()
-                .ForMember(dest => dest.CompanyId, opt => opt.Ignore());
+                .ForMember(dest => dest.CompanyId, opt => opt.Ignore())
+                .ForMember(d=>d.ApplicationUserId, o=>o.Ignore());
             CreateMap<FileDto, ExcelFileUsers>()
                 .ForMember(dest => dest.Company, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.Ignore())

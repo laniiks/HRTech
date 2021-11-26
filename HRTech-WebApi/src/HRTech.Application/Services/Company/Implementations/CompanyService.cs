@@ -7,6 +7,7 @@ using Common.Enums;
 using HRTech.Application.Abstractions;
 using HRTech.Application.Models;
 using HRTech.Application.Services.Company.Interfaces;
+using HRTech.Application.Services.Evaluation.Interfaces;
 using HRTech.Application.Services.User.Interfaces;
 using HRTech.Domain;
 using Microsoft.AspNetCore.Identity;
@@ -23,6 +24,8 @@ namespace HRTech.Application.Services.Company.Implementations
         private readonly IGetUsersFromExcelFile _getUsersFromExcelFile;
 
         private readonly IRepository<Domain.Address> _addressRepository;
+        private readonly IApplicationUserRepository _applicationUserRepository;
+        private readonly IEvaluationRepository _evaluationRepository;
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserService _userService;
@@ -39,7 +42,7 @@ namespace HRTech.Application.Services.Company.Implementations
             IRepository<Domain.Address> addressRepository, 
             IRepository<ExcelFileUsers> excelFileUsersRepository, 
             IGeneratePassword generatePassword, 
-            IGetUsersFromExcelFile getUsersFromExcelFile)
+            IGetUsersFromExcelFile getUsersFromExcelFile, IApplicationUserRepository applicationUserRepository, IEvaluationRepository evaluationRepository)
         {
             _companyRepository = companyRepository;
             _userManager = userManager;
@@ -51,6 +54,8 @@ namespace HRTech.Application.Services.Company.Implementations
             _excelFileUsersRepository = excelFileUsersRepository;
             _generatePassword = generatePassword;
             _getUsersFromExcelFile = getUsersFromExcelFile;
+            _applicationUserRepository = applicationUserRepository;
+            _evaluationRepository = evaluationRepository;
         }
         
         public async Task<Guid> Create(CompanyDto companyDto, CancellationToken cancellationToken)
@@ -79,7 +84,14 @@ namespace HRTech.Application.Services.Company.Implementations
                 {
                     throw new Exception("Не найдено");
                 }
-
+                foreach (var evaluation in company.Evaluations)
+                {
+                    await _evaluationRepository.Delete(evaluation, cancellationToken);
+                }
+                foreach (var user in company.Employees)
+                {
+                    await _userManager.DeleteAsync(user);
+                }
                 await _addressRepository.Delete(company.Address, cancellationToken);
                 await _imageRepository.Delete(company.Image, cancellationToken);
                 await _excelFileUsersRepository.Delete(company.ExcelFileUsers, cancellationToken);
@@ -190,6 +202,30 @@ namespace HRTech.Application.Services.Company.Implementations
             {
                 var listUsers = _getUsersFromExcelFile.GetUsersFromExcelFile(company.ExcelFileUsers, company.Id);
                 await _userService.CreateRange(listUsers);
+            }
+            
+            return true;
+        }
+
+        public async Task<bool> RejectCompany(Guid companyId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var company = await _companyRepository.GetByIdGuid(companyId);
+                if (company == null)
+                {
+                    throw new Exception("Не найдено");
+                }
+
+                await _addressRepository.Delete(company.Address, cancellationToken);
+                await _imageRepository.Delete(company.Image, cancellationToken);
+                await _excelFileUsersRepository.Delete(company.ExcelFileUsers, cancellationToken);
+                await _companyRepository.Delete(company, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
             
             return true;

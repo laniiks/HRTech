@@ -12,6 +12,7 @@ namespace HRTech.Application.Mapping
             CreateMap<Image, FileDto>();
             CreateMap<FileDto, Image>()
                 .ForMember(dest => dest.Company, opt => opt.Ignore())
+                .ForMember(dest => dest.ApplicationUser, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedDateTime, opt => opt.MapFrom(m=>DateTime.UtcNow));
         }
