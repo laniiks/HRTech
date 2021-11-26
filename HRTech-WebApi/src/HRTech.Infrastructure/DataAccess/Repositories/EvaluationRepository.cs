@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -28,6 +29,13 @@ namespace HRTech.Infrastructure.DataAccess.Repositories
                             (x.ApplicationUserIdExpertSoftSkills == userId || 
                              x.ApplicationUserIdExpertHardSkills == userId || 
                              x.ApplicationUserIdExpertEnglishSkills == userId))
+                .ToArrayAsync(cancellationToken);        
+        }
+
+        public async Task<ICollection<Evaluation>> GetAllEvalutionInCompany(Guid companyId, CancellationToken cancellationToken)
+        {
+            return await _databaseContext.Evaluations
+                .Where(x => x.CompanyId == companyId)
                 .ToArrayAsync(cancellationToken);        
         }
     }

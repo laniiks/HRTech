@@ -16,6 +16,8 @@ namespace HRTech.Application.Services.Evaluation.Interfaces
             CancellationToken cancellationToken);
         Task<GetAll.Response> GetAllResponseEvaluationForExpertUser(ApplicationUser user,
             CancellationToken cancellationToken);
+        Task<GetAll.Response> GetAllResponseEvaluationInCompany(Guid companyId,
+            CancellationToken cancellationToken);
 
         Task<Guid> CreateEvaluation(EvaluationDto evaluationDto, ApplicationUser user, CancellationToken cancellationToken);
         Task<Guid> SoftSkillSuccess(Guid evaluationId, EvaluationSuccessState softSkillSuccess, ApplicationUser user, CancellationToken cancellationToken);

@@ -11,7 +11,6 @@ namespace HRTech.Application.Mapping
             CreateMap<UserDto, ApplicationUser>()
                 .ForMember(dest => dest.Company, opt => opt.Ignore())
                 .ForMember(dest => dest.PersonalDevelopmentPlans, opt => opt.Ignore())
-                .ForMember(dest => dest.Grades, opt => opt.Ignore())
                 .ForMember(dest => dest.Comments, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(m=>m.ApplicationUserId))
                 .ForMember(dest => dest.NormalizedUserName, opt => opt.Ignore())
@@ -32,6 +31,7 @@ namespace HRTech.Application.Mapping
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+                .ForMember(dest => dest.Photo, opt => opt.MapFrom(src=>src.Photo ?? new Image()))
                 .ForMember(dest => dest.Patronymic, opt => opt.MapFrom(src => src.Patronymic))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber));
             CreateMap<ApplicationUser, RegisterDto>()

@@ -35,7 +35,8 @@ namespace HRTech.WebApi.Mapping
                 .ForMember(d=>d.Id, o=>o.Ignore())
                 .ForMember(d=>d.CreatedDateTime, o=>o.Ignore());
             CreateMap<UploadFileRequest, FileDto>()
-                .ForMember(d=>d.CompanyId, o=>o.Ignore());
+                .ForMember(d=>d.CompanyId, o=>o.Ignore())
+                .ForMember(d=>d.ApplicationUserId, o=>o.Ignore());
             
             CreateMap<CommentCreateRequest, CommentDto>()
                 .ForMember(d => d.UserName, opt => opt.Ignore())

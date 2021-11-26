@@ -3,14 +3,16 @@ using System;
 using HRTech.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HRTech.Infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20211124160901_AddDirectorCompany")]
+    partial class AddDirectorCompany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,9 +219,6 @@ namespace HRTech.Infrastructure.Migrations
                     b.Property<string>("ApplicationUserIdExpertSoftSkills")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<Guid?>("CompanyId")
-                        .HasColumnType("char(36)");
-
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime(6)");
 
@@ -253,8 +252,6 @@ namespace HRTech.Infrastructure.Migrations
                     b.HasIndex("ApplicationUserIdExpertHardSkills");
 
                     b.HasIndex("ApplicationUserIdExpertSoftSkills");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasIndex("CurrentGradeId");
 
@@ -337,10 +334,7 @@ namespace HRTech.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<Guid?>("CompanyId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("char(36)");
 
                     b.Property<byte[]>("Content")
@@ -359,9 +353,6 @@ namespace HRTech.Infrastructure.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId")
-                        .IsUnique();
 
                     b.HasIndex("CompanyId")
                         .IsUnique();
@@ -596,10 +587,6 @@ namespace HRTech.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("ApplicationUserIdExpertSoftSkills");
 
-                    b.HasOne("HRTech.Domain.Company", "Company")
-                        .WithMany("Evaluations")
-                        .HasForeignKey("CompanyId");
-
                     b.HasOne("HRTech.Domain.Grade", "CurrentGrade")
                         .WithMany()
                         .HasForeignKey("CurrentGradeId");
@@ -615,8 +602,6 @@ namespace HRTech.Infrastructure.Migrations
                     b.Navigation("ApplicationUserExpertSoftSkills");
 
                     b.Navigation("ApplicationUsers");
-
-                    b.Navigation("Company");
 
                     b.Navigation("CurrentGrade");
 
@@ -636,15 +621,11 @@ namespace HRTech.Infrastructure.Migrations
 
             modelBuilder.Entity("HRTech.Domain.Image", b =>
                 {
-                    b.HasOne("HRTech.Domain.ApplicationUser", "ApplicationUser")
-                        .WithOne("Photo")
-                        .HasForeignKey("HRTech.Domain.Image", "ApplicationUserId");
-
                     b.HasOne("HRTech.Domain.Company", "Company")
                         .WithOne("Image")
-                        .HasForeignKey("HRTech.Domain.Image", "CompanyId");
-
-                    b.Navigation("ApplicationUser");
+                        .HasForeignKey("HRTech.Domain.Image", "CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Company");
                 });
@@ -719,15 +700,11 @@ namespace HRTech.Infrastructure.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("PersonalDevelopmentPlans");
-
-                    b.Navigation("Photo");
                 });
 
             modelBuilder.Entity("HRTech.Domain.Company", b =>
                 {
                     b.Navigation("Employees");
-
-                    b.Navigation("Evaluations");
 
                     b.Navigation("GradesCollection");
 

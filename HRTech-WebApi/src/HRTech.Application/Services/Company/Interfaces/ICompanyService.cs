@@ -17,5 +17,6 @@ namespace HRTech.Application.Services.Company.Interfaces
 
         Task<Guid> EditCompany(CompanyDto companyDto, CancellationToken cancellationToken);
         Task<bool> ActiveCompany(Guid id, bool isRegisterUser, CancellationToken cancellationToken);
+        Task<bool> RejectCompany(Guid companyId, CancellationToken cancellationToken);
     }
 }

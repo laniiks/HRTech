@@ -40,6 +40,8 @@ namespace HRTech.Domain
         public EvaluationSuccessState SoftSkillSuccess { get; set; }
         public EvaluationSuccessState HardSkillSuccess { get; set; }
         public EvaluationSuccessState EnglishSkillSuccess { get; set; }
-
+        
+        public Guid? CompanyId { get; set; }
+        public virtual Company Company { get; set; }
     }
 }

@@ -49,7 +49,11 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                             FirstName = evaluation.ApplicationUsers.FirstName,
                             LastName = evaluation.ApplicationUsers.LastName,
                             Patronymic = evaluation.ApplicationUsers.Patronymic,
-                            ExpertUserState = evaluation.ApplicationUsers.ExpertUserState
+                            ExpertUserState = evaluation.ApplicationUsers.ExpertUserState,
+                            Photo = evaluation.ApplicationUsers.Photo != null ? new FileDto
+                            {
+                                Content = evaluation.ApplicationUsers.Photo.Content
+                            }: null
                         }
                         : new UserDto(),
                     ApplicationUserIdExpertSoftSkills = evaluation.ApplicationUserIdExpertSoftSkills,
@@ -60,7 +64,11 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                             FirstName = evaluation.ApplicationUserExpertSoftSkills.FirstName,
                             LastName = evaluation.ApplicationUserExpertSoftSkills.LastName,
                             Patronymic = evaluation.ApplicationUserExpertSoftSkills.Patronymic,
-                            ExpertUserState = evaluation.ApplicationUserExpertSoftSkills.ExpertUserState
+                            ExpertUserState = evaluation.ApplicationUserExpertSoftSkills.ExpertUserState,
+                            Photo = evaluation.ApplicationUserExpertSoftSkills.Photo != null ? new FileDto
+                            {
+                                Content = evaluation.ApplicationUserExpertSoftSkills.Photo.Content
+                            }: null
                         }
                         : new UserDto(),
                     ApplicationUserIdExpertHardSkills = evaluation.ApplicationUserIdExpertHardSkills,
@@ -71,7 +79,11 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                             FirstName = evaluation.ApplicationUserExpertHardSkills.FirstName,
                             LastName = evaluation.ApplicationUserExpertHardSkills.LastName,
                             Patronymic = evaluation.ApplicationUserExpertHardSkills.Patronymic,
-                            ExpertUserState = evaluation.ApplicationUserExpertHardSkills.ExpertUserState
+                            ExpertUserState = evaluation.ApplicationUserExpertHardSkills.ExpertUserState,
+                            Photo = evaluation.ApplicationUserExpertHardSkills.Photo != null ? new FileDto
+                            {
+                                Content = evaluation.ApplicationUserExpertHardSkills.Photo.Content
+                            }: null
                         }
                         : new UserDto(),
                     ApplicationUserIdExpertEnglishSkills = evaluation.ApplicationUserIdExpertEnglishSkills,
@@ -82,7 +94,11 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                             FirstName = evaluation.ApplicationUserExpertEnglishSkills.FirstName,
                             LastName = evaluation.ApplicationUserExpertEnglishSkills.LastName,
                             Patronymic = evaluation.ApplicationUserExpertEnglishSkills.Patronymic,
-                            ExpertUserState = evaluation.ApplicationUserExpertEnglishSkills.ExpertUserState
+                            ExpertUserState = evaluation.ApplicationUserExpertEnglishSkills.ExpertUserState,
+                            Photo = evaluation.ApplicationUserExpertEnglishSkills.Photo != null ? new FileDto
+                            {
+                                Content = evaluation.ApplicationUserExpertEnglishSkills.Photo.Content
+                            }: null
                         }
                         : new UserDto(),
                     CurrentGradeId = evaluation.CurrentGradeId,
@@ -122,7 +138,11 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                             FirstName = eva.ApplicationUsers.FirstName,
                             LastName = eva.ApplicationUsers.LastName,
                             Patronymic = eva.ApplicationUsers.Patronymic,
-                            ExpertUserState = eva.ApplicationUsers.ExpertUserState
+                            ExpertUserState = eva.ApplicationUsers.ExpertUserState,
+                            Photo = eva.ApplicationUsers.Photo != null ? new FileDto
+                            {
+                                Content = eva.ApplicationUsers.Photo.Content
+                            }: null
                         }
                         : new UserDto(),
                     ApplicationUserIdExpertSoftSkills = eva.ApplicationUserIdExpertSoftSkills,
@@ -133,7 +153,11 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                             FirstName = eva.ApplicationUserExpertSoftSkills.FirstName,
                             LastName = eva.ApplicationUserExpertSoftSkills.LastName,
                             Patronymic = eva.ApplicationUserExpertSoftSkills.Patronymic,
-                            ExpertUserState = eva.ApplicationUserExpertSoftSkills.ExpertUserState
+                            ExpertUserState = eva.ApplicationUserExpertSoftSkills.ExpertUserState,
+                            Photo = eva.ApplicationUserExpertSoftSkills.Photo != null ? new FileDto
+                            {
+                                Content = eva.ApplicationUserExpertSoftSkills.Photo.Content
+                            }: null
                         }
                         : new UserDto(),
                     ApplicationUserIdExpertHardSkills = eva.ApplicationUserIdExpertHardSkills,
@@ -144,7 +168,11 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                             FirstName = eva.ApplicationUserExpertHardSkills.FirstName,
                             LastName = eva.ApplicationUserExpertHardSkills.LastName,
                             Patronymic = eva.ApplicationUserExpertHardSkills.Patronymic,
-                            ExpertUserState = eva.ApplicationUserExpertHardSkills.ExpertUserState
+                            ExpertUserState = eva.ApplicationUserExpertHardSkills.ExpertUserState,
+                            Photo = eva.ApplicationUserExpertHardSkills.Photo != null ? new FileDto
+                            {
+                                Content = eva.ApplicationUserExpertHardSkills.Photo.Content
+                            }: null
                         }
                         : new UserDto(),
                     ApplicationUserIdExpertEnglishSkills = eva.ApplicationUserIdExpertEnglishSkills,
@@ -155,7 +183,11 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                             FirstName = eva.ApplicationUserExpertEnglishSkills.FirstName,
                             LastName = eva.ApplicationUserExpertEnglishSkills.LastName,
                             Patronymic = eva.ApplicationUserExpertEnglishSkills.Patronymic,
-                            ExpertUserState = eva.ApplicationUserExpertEnglishSkills.ExpertUserState
+                            ExpertUserState = eva.ApplicationUserExpertEnglishSkills.ExpertUserState,
+                            Photo = eva.ApplicationUserExpertEnglishSkills.Photo != null ? new FileDto
+                            {
+                                Content = eva.ApplicationUserExpertEnglishSkills.Photo.Content
+                            }: null
                         }
                         : new UserDto(),
                     CurrentGradeId = eva.CurrentGradeId,
@@ -172,7 +204,7 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                     HardSkillSuccess = eva.HardSkillSuccess,
                     EnglishSkillSuccess = eva.EnglishSkillSuccess,
                 })
-            };
+            }; 
         }
 
         public async Task<GetAll.Response> GetAllResponseEvaluationForExpertUser(ApplicationUser user, CancellationToken cancellationToken)
@@ -195,7 +227,11 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                             FirstName = eva.ApplicationUsers.FirstName,
                             LastName = eva.ApplicationUsers.LastName,
                             Patronymic = eva.ApplicationUsers.Patronymic,
-                            ExpertUserState = eva.ApplicationUsers.ExpertUserState
+                            ExpertUserState = eva.ApplicationUsers.ExpertUserState,
+                            Photo = eva.ApplicationUsers.Photo != null ? new FileDto
+                            {
+                                Content = eva.ApplicationUsers.Photo.Content
+                            }: null
                         }
                         : new UserDto(),
                     ApplicationUserIdExpertSoftSkills = eva.ApplicationUserIdExpertSoftSkills,
@@ -206,7 +242,11 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                             FirstName = eva.ApplicationUserExpertSoftSkills.FirstName,
                             LastName = eva.ApplicationUserExpertSoftSkills.LastName,
                             Patronymic = eva.ApplicationUserExpertSoftSkills.Patronymic,
-                            ExpertUserState = eva.ApplicationUserExpertSoftSkills.ExpertUserState
+                            ExpertUserState = eva.ApplicationUserExpertSoftSkills.ExpertUserState,
+                            Photo = eva.ApplicationUserExpertSoftSkills.Photo != null ? new FileDto
+                            {
+                                Content = eva.ApplicationUserExpertSoftSkills.Photo.Content
+                            }: null
                         }
                         : new UserDto(),
                     ApplicationUserIdExpertHardSkills = eva.ApplicationUserIdExpertHardSkills,
@@ -217,7 +257,11 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                             FirstName = eva.ApplicationUserExpertHardSkills.FirstName,
                             LastName = eva.ApplicationUserExpertHardSkills.LastName,
                             Patronymic = eva.ApplicationUserExpertHardSkills.Patronymic,
-                            ExpertUserState = eva.ApplicationUserExpertHardSkills.ExpertUserState
+                            ExpertUserState = eva.ApplicationUserExpertHardSkills.ExpertUserState,
+                            Photo = eva.ApplicationUserExpertHardSkills.Photo != null ? new FileDto
+                            {
+                                Content = eva.ApplicationUserExpertHardSkills.Photo.Content
+                            }: null
                         }
                         : new UserDto(),
                     ApplicationUserIdExpertEnglishSkills = eva.ApplicationUserIdExpertEnglishSkills,
@@ -228,7 +272,11 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                             FirstName = eva.ApplicationUserExpertEnglishSkills.FirstName,
                             LastName = eva.ApplicationUserExpertEnglishSkills.LastName,
                             Patronymic = eva.ApplicationUserExpertEnglishSkills.Patronymic,
-                            ExpertUserState = eva.ApplicationUserExpertEnglishSkills.ExpertUserState
+                            ExpertUserState = eva.ApplicationUserExpertEnglishSkills.ExpertUserState,
+                            Photo = eva.ApplicationUserExpertEnglishSkills.Photo != null ? new FileDto
+                            {
+                                Content = eva.ApplicationUserExpertEnglishSkills.Photo.Content
+                            }: null
                         }
                         : new UserDto(),
                     CurrentGradeId = eva.CurrentGradeId,
@@ -245,7 +293,96 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                     HardSkillSuccess = eva.HardSkillSuccess,
                     EnglishSkillSuccess = eva.EnglishSkillSuccess,
                 })
-            };
+            }; 
+        }
+
+        public async Task<GetAll.Response> GetAllResponseEvaluationInCompany(Guid companyId, CancellationToken cancellationToken)
+        {
+            var evaluations = await _evaluationRepository.GetAllEvalutionInCompany(companyId, cancellationToken);
+
+            return new GetAll.Response
+            {
+                Evaluation = evaluations.Select(eva => new EvaluationDto
+                {
+                    Id = eva.Id,
+                    CreatedDateTime = eva.CreatedDateTime,
+                    EvaluationState = eva.EvaluationState,
+                    DateOfEvaluation = eva.DateOfEvaluation,
+                    ApplicationUserId = eva.ApplicationUserId,
+                    ApplicationUsers = eva.ApplicationUsers != null
+                        ? new UserDto
+                        {
+                            ApplicationUserId = eva.ApplicationUserId,
+                            FirstName = eva.ApplicationUsers.FirstName,
+                            LastName = eva.ApplicationUsers.LastName,
+                            Patronymic = eva.ApplicationUsers.Patronymic,
+                            ExpertUserState = eva.ApplicationUsers.ExpertUserState,
+                            Photo = eva.ApplicationUsers.Photo != null ? new FileDto
+                            {
+                                Content = eva.ApplicationUsers.Photo.Content
+                            }: null
+                        }
+                        : new UserDto(),
+                    ApplicationUserIdExpertSoftSkills = eva.ApplicationUserIdExpertSoftSkills,
+                    ApplicationUserExpertSoftSkills = eva.ApplicationUserExpertSoftSkills != null
+                        ? new UserDto
+                        {
+                            ApplicationUserId = eva.ApplicationUserIdExpertSoftSkills,
+                            FirstName = eva.ApplicationUserExpertSoftSkills.FirstName,
+                            LastName = eva.ApplicationUserExpertSoftSkills.LastName,
+                            Patronymic = eva.ApplicationUserExpertSoftSkills.Patronymic,
+                            ExpertUserState = eva.ApplicationUserExpertSoftSkills.ExpertUserState,
+                            Photo = eva.ApplicationUserExpertSoftSkills.Photo != null ? new FileDto
+                            {
+                                Content = eva.ApplicationUserExpertSoftSkills.Photo.Content
+                            }: null
+                        }
+                        : new UserDto(),
+                    ApplicationUserIdExpertHardSkills = eva.ApplicationUserIdExpertHardSkills,
+                    ApplicationUserExpertHardSkills = eva.ApplicationUserExpertHardSkills != null
+                        ? new UserDto
+                        {
+                            ApplicationUserId = eva.ApplicationUserIdExpertHardSkills,
+                            FirstName = eva.ApplicationUserExpertHardSkills.FirstName,
+                            LastName = eva.ApplicationUserExpertHardSkills.LastName,
+                            Patronymic = eva.ApplicationUserExpertHardSkills.Patronymic,
+                            ExpertUserState = eva.ApplicationUserExpertHardSkills.ExpertUserState,
+                            Photo = eva.ApplicationUserExpertHardSkills.Photo != null ? new FileDto
+                            {
+                                Content = eva.ApplicationUserExpertHardSkills.Photo.Content
+                            }: null
+                        }
+                        : new UserDto(),
+                    ApplicationUserIdExpertEnglishSkills = eva.ApplicationUserIdExpertEnglishSkills,
+                    ApplicationUserExpertEnglishSkills = eva.ApplicationUserExpertEnglishSkills != null
+                        ? new UserDto
+                        {
+                            ApplicationUserId = eva.ApplicationUserIdExpertEnglishSkills,
+                            FirstName = eva.ApplicationUserExpertEnglishSkills.FirstName,
+                            LastName = eva.ApplicationUserExpertEnglishSkills.LastName,
+                            Patronymic = eva.ApplicationUserExpertEnglishSkills.Patronymic,
+                            ExpertUserState = eva.ApplicationUserExpertEnglishSkills.ExpertUserState,
+                            Photo = eva.ApplicationUserExpertEnglishSkills.Photo != null ? new FileDto
+                            {
+                                Content = eva.ApplicationUserExpertEnglishSkills.Photo.Content
+                            }: null
+                        }
+                        : new UserDto(),
+                    CurrentGradeId = eva.CurrentGradeId,
+                    CurrentGrade = eva.CurrentGrade != null ? new GradeDto
+                    {
+                        Title = eva.CurrentGrade.Title
+                    } : new GradeDto(),
+                    NextGradeId = eva.NextGradeId,
+                    NextGrade = eva.NextGrade != null ? new GradeDto
+                    {
+                        Title = eva.NextGrade.Title
+                    } : new GradeDto(),
+                    SoftSkillSuccess = eva.SoftSkillSuccess,
+                    HardSkillSuccess = eva.HardSkillSuccess,
+                    EnglishSkillSuccess = eva.EnglishSkillSuccess,
+                })
+            };        
         }
 
         public async Task<Guid> CreateEvaluation(EvaluationDto evaluationDto, ApplicationUser user,

@@ -20,8 +20,20 @@ namespace HRTech.Infrastructure.DataAccess.Repositories
         {
             return await _databaseContext.ApplicationUsers
                 .AsNoTracking()
+                .Include(x=>x.Photo)
+                .Include(x=>x.Grades)
                 .Where(x => x.CompanyId == companyId && x.ExpertUserState == expertUserState && x.Id != userId)
                 .ToArrayAsync(cancellationToken);
+        }
+
+        public async Task<ICollection<ApplicationUser>> GetAllUserInCompany(Guid companyId, CancellationToken cancellationToken)
+        {
+            return await _databaseContext.ApplicationUsers
+                .AsNoTracking()
+                .Include(x=>x.Photo)
+                .Include(x=>x.Grades)
+                .Where(x => x.CompanyId == companyId)
+                .ToArrayAsync(cancellationToken);        
         }
     }
 }

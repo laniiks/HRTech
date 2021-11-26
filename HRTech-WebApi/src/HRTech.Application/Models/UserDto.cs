@@ -14,6 +14,9 @@ namespace HRTech.Application.Models
         
         public Guid CompanyId { get; set; }
         public int GradeId { get; set; }
+        public virtual GradeDto Grades { get; set; }
         public ExpertUserState ExpertUserState { get; set; }
+        public bool IsDirector { get; set; }
+        public virtual FileDto? Photo { get; set; }
     }
 }

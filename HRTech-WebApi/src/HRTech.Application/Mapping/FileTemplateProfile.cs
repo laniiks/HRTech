@@ -17,6 +17,7 @@ namespace HRTech.Application.Mapping
             
             CreateMap<FileTemplate, FileDto>()
                 .ForMember(dest => dest.CompanyId, opt => opt.Ignore())
+                .ForMember(dest => dest.ApplicationUserId, opt => opt.Ignore())
                 .ForMember(dest => dest.FileType, opt => opt.Ignore())
                 .ForMember(dest => dest.FileGuid, opt => opt.Ignore());
 

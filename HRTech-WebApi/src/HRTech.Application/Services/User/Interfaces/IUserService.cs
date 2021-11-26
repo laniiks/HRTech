@@ -25,5 +25,9 @@ namespace HRTech.Application.Services.User.Interfaces
 
         Task<ICollection<ApplicationUser>> GetAllExpertUserInCompany(string userId, Guid companyId, ExpertUserState expertUserState,
             CancellationToken cancellationToken);
+
+        Task<bool> IsDirector(ApplicationUser applicationUser, Guid companyId, CancellationToken cancellationToken);
+        Task<string> AddPhotoUser(ApplicationUser user, FileDto fileDto, CancellationToken cancellationToken);
+        Task<ICollection<ApplicationUser>> GetAllUserInCompany(Guid companyId, CancellationToken cancellationToken);
     }
 }

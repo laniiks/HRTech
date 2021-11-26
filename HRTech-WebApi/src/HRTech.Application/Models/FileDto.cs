@@ -9,5 +9,6 @@ namespace HRTech.Application.Models
         public string FileType { get; set; }
         public byte[] Content { get; set; }
         public Guid CompanyId { get; set; }
+        public string ApplicationUserId { get; set; }
     }
 }

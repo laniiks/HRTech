@@ -10,10 +10,10 @@ namespace HRTech.Domain
         public string FileType { get; set; }
         public byte[] Content { get; set; }
         
-        public Guid CompanyId { get; set; }
+        public Guid? CompanyId { get; set; }
         public virtual Company Company { get; set; }
         
-        // public string ApplicationUserId { get; set; }
-        // public virtual ApplicationUser ApplicationUser { get; set; }
+        public string? ApplicationUserId { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
     }
 }

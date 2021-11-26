@@ -67,7 +67,14 @@ namespace HRTech.WebApi.Controllers.Evaluation
             var result = await _evaluationService.GetAllResponseEvaluationForExpertUser(await GetCurrentUser(), cancellationToken);
             return Ok(result);
         }
-
+        
+        [HttpGet("GetAllResponseEvaluationInCompany/{companyId}")]
+        public async Task<IActionResult> GetAllResponseEvaluationInCompany(Guid companyId, CancellationToken cancellationToken)
+        {
+            var result = await _evaluationService.GetAllResponseEvaluationInCompany(companyId, cancellationToken);
+            return Ok(result);
+        }
+        
         [HttpPut("SuccessEvaluationSoftSkill")]
         public async Task<IActionResult> SuccessEvaluationSoftSkill(Guid evaluationId, EvaluationSuccessState skillSuccess,
             CancellationToken cancellationToken)

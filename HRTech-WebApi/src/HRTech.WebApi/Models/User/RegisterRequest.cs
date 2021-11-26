@@ -13,5 +13,6 @@ namespace HRTech.WebApi.Models.User
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
         public Guid CompanyId { get; set; }
+        public bool IsDirector { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using HRTech.Application.Common;
 using HRTech.Application.Models;
 using HRTech.Application.Services.User.Interfaces;
 using HRTech.Domain;
@@ -123,8 +124,16 @@ namespace HRTech.WebApi.Controllers.User
             var result = _userService.UpdateGrade(await GetCurrentUser(), gradeId, CancellationToken.None);
             return Ok(result);
         }
-        
-        
+
+        [HttpGet("IsAdmin")]
+        public async Task<IActionResult> IsAdmin()
+        {
+            var user = await GetCurrentUser();
+            var result = await _userService.IsInRole(user.Id, RolesConst.Admin);
+            return Ok(result);
+        }
+
+
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
