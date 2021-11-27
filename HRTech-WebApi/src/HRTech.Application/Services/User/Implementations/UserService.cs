@@ -241,11 +241,11 @@ namespace HRTech.Application.Services.User.Implementations
 
             if (user.Photo != null)
             {
-                await _imageRepository.Delete(user.Photo, cancellationToken);
+                await _imageRepository.Delete(user.Photo);
             }
             us.Photo = photo;
-            await _imageRepository.Add(photo, cancellationToken);
-            await _applicationUserRepository.Update(us, cancellationToken);
+            await _imageRepository.Add(photo);
+            await _applicationUserRepository.Update(us);
             await _imageRepository.SaveChanges(cancellationToken);
             await _applicationUserRepository.SaveChanges(cancellationToken);
 

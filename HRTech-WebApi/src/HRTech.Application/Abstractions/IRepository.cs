@@ -14,8 +14,13 @@ namespace HRTech.Application.Abstractions
         Task<ICollection<T>> GetAll(CancellationToken cancellationToken);
         Task<int> GetCount(CancellationToken cancellationToken);
         Task<T> Add(T entity, CancellationToken cancellationToken);
+        Task<T> Add(T entity);
+
         Task<T> Update(T entity, CancellationToken cancellationToken);
+        Task<T> Update(T entity);
+
         Task Delete(T entity, CancellationToken cancellationToken);
+        Task Delete(T entity);
         Task SaveChanges(CancellationToken cancellationToken);
     }
 }

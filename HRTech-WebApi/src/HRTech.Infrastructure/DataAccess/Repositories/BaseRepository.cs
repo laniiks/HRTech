@@ -48,7 +48,19 @@ namespace HRTech.Infrastructure.DataAccess.Repositories
             return entity;        
         }
 
+        public async Task<T> Add(T entity)
+        {
+            await _entity.AddAsync(entity);
+            return entity;
+        }
+
         public async Task<T> Update(T entity, CancellationToken cancellationToken)
+        {
+            _entity.Update(entity);
+            return entity;
+        }
+
+        public async Task<T> Update(T entity)
         {
             _entity.Update(entity);
             return entity;
@@ -58,6 +70,12 @@ namespace HRTech.Infrastructure.DataAccess.Repositories
         {
             _entity.Remove(entity);
             return _databaseContext.SaveChangesAsync(cancellationToken);        
+        }
+
+        public Task Delete(T entity)
+        {
+            _entity.Remove(entity);
+            return _databaseContext.SaveChangesAsync();        
         }
 
         public async Task SaveChanges(CancellationToken cancellationToken)
