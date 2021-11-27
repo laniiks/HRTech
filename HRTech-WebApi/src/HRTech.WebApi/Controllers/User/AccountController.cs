@@ -70,7 +70,26 @@ namespace HRTech.WebApi.Controllers.User
             await _userService.SignOut();
             return Ok("Logged out");
         }
-         [AllowAnonymous]
+
+        [HttpPost("addUserInCompany")]
+        public async Task<IActionResult> AddUserInCompany([FromBody] RegisterRequest registerRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = _mapper.Map<ApplicationUser>(registerRequest);
+            var result = await _userService.CreateUser(user);
+            if (result.Succeeded)
+            {
+                return Ok(user);
+            }
+            AddErrors(result);
+            return BadRequest(result);
+        }
+        
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
         {

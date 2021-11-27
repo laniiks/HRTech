@@ -32,13 +32,13 @@ namespace HRTech.Application.Services.User.Implementations
         private readonly IGradeRepository _gradeRepository;
         private readonly IApplicationUserRepository _applicationUserRepository;
         private readonly IRepository<Image> _imageRepository;
-
+        private readonly IGeneratePassword _generatePassword;
 
         public UserService(
             UserManager<ApplicationUser> userManager, 
             SignInManager<ApplicationUser> signInManager, 
             RoleManager<IdentityRole> roleManager, 
-            ILogger<UserService> logger, IMapper mapper, ISendEndpointProvider sendEndpointProvider, HtmlMessage htmlMessage, IGradeRepository gradeRepository, IApplicationUserRepository applicationUserRepository, IRepository<Image> imageRepository)
+            ILogger<UserService> logger, IMapper mapper, ISendEndpointProvider sendEndpointProvider, HtmlMessage htmlMessage, IGradeRepository gradeRepository, IApplicationUserRepository applicationUserRepository, IRepository<Image> imageRepository, IGeneratePassword generatePassword)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -50,6 +50,7 @@ namespace HRTech.Application.Services.User.Implementations
             _gradeRepository = gradeRepository;
             _applicationUserRepository = applicationUserRepository;
             _imageRepository = imageRepository;
+            _generatePassword = generatePassword;
         }
 
         public async Task<ApplicationUser> GetUserByEmail(string email)
@@ -84,6 +85,13 @@ namespace HRTech.Application.Services.User.Implementations
             }
 
             return await _userManager.IsInRoleAsync(identityUser, role);            
+        }
+
+        public async Task<IdentityResult> CreateUser(ApplicationUser user)
+        {
+            var password = _generatePassword.GeneratePassword();
+            var result = await Create(user, password);
+            return result;
         }
 
         public async Task<IdentityResult> Create(ApplicationUser user, string password)
@@ -189,9 +197,10 @@ namespace HRTech.Application.Services.User.Implementations
 
         public async Task<int> UpdateGrade(ApplicationUser user, int idGrade, CancellationToken cancellationToken)
         {
-            var users = await _userManager.FindByIdAsync(user.Id);
+            var users = await _applicationUserRepository.GetById(user.Id);
             users.GradeId = idGrade;
-            await _userManager.UpdateAsync(users);
+            await _applicationUserRepository.Update(users, cancellationToken);
+            await _applicationUserRepository.SaveChanges(cancellationToken);
             return idGrade;
         }
 

@@ -17,6 +17,8 @@ namespace HRTech.Application.Services.User.Interfaces
         Task<bool> CheckPasswordSignIn(ApplicationUser user, string password);
         Task SignOut();
         Task<bool> IsInRole(string userId, string role);
+        Task<IdentityResult> CreateUser(ApplicationUser user);
+
         Task<IdentityResult> Create(ApplicationUser user, string password);
         Task<ICollection<IdentityResult>> CreateRange(List<RegisterDto> users);
 

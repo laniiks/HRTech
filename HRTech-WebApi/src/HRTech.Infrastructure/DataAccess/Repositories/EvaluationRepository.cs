@@ -25,10 +25,9 @@ namespace HRTech.Infrastructure.DataAccess.Repositories
         public async Task<ICollection<Evaluation>> GetAllEvaluationForExpertUser(string userId, CancellationToken cancellationToken)
         {
             return await _databaseContext.Evaluations
-                .Where(x => x.ApplicationUserId == userId && 
-                            (x.ApplicationUserIdExpertSoftSkills == userId || 
-                             x.ApplicationUserIdExpertHardSkills == userId || 
-                             x.ApplicationUserIdExpertEnglishSkills == userId))
+                .Where(x => x.ApplicationUserIdExpertSoftSkills == userId || 
+                            x.ApplicationUserIdExpertHardSkills == userId || 
+                            x.ApplicationUserIdExpertEnglishSkills == userId)
                 .ToArrayAsync(cancellationToken);        
         }
 
