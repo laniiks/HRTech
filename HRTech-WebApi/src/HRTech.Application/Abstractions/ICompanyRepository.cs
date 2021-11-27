@@ -9,5 +9,6 @@ namespace HRTech.Application.Abstractions
     public interface ICompanyRepository : IRepository<Company>
     {
         Task<ICollection<Company>> GetAll(CompanyState state, CancellationToken cancellationToken);
+        Task<int> GetCountNewCompany(CancellationToken cancellationToken);
     }
 }

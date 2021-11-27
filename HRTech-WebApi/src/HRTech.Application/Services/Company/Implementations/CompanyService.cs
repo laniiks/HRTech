@@ -273,5 +273,11 @@ namespace HRTech.Application.Services.Company.Implementations
             
             return true;
         }
+
+        public async Task<int> GetCountNewCompany(CancellationToken cancellationToken)
+        {
+            var countNewCompany = await _companyRepository.GetCountNewCompany(cancellationToken);
+            return countNewCompany;
+        }
     }
 }

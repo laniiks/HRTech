@@ -100,6 +100,13 @@ namespace HRTech.WebApi.Controllers.Company
             var result = await _companyService.RejectCompany(companyId, CancellationToken.None);
             return Ok(result);
         }
-        
+
+        [HttpGet("GetCountNewCompany")]
+        public async Task<IActionResult> GetCountNewCompany(CancellationToken cancellationToken)
+        {
+            var result = await _companyService.GetCountNewCompany(cancellationToken);
+            return Ok(result);
+        }
+
     }
 }
