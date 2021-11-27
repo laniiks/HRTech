@@ -54,6 +54,11 @@ namespace HRTech.WebApi.Controllers.User
                 return BadRequest();
             }
 
+            if (user.EmailConfirmed == false)
+            {
+                return BadRequest();
+            }
+
             var result = await _userService.CheckPasswordSignIn(user, loginRequest.Password);
             if (result)
             {

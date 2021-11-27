@@ -11,6 +11,7 @@ namespace HRTech.Application.Services.Company.Interfaces
     {
         Task<Guid> Create(CompanyDto companyDto, CancellationToken cancellationToken);
         Task<bool> Delete(Guid id, CancellationToken cancellationToken);
+        Task<bool> RestoreCompany(Guid companyId, CancellationToken cancellationToken);
         Task<CompanyDto> GetById(Guid id, CancellationToken cancellationToken);
         Task<ICollection<Domain.Company>> GetNewOrActiveCompany(bool isNewCompany, CancellationToken cancellationToken);
         Task<ICollection<Domain.Company>> GetAll(CancellationToken cancellationToken);

@@ -3,6 +3,7 @@
     public enum CompanyState
     {
         New = 0,
-        Active = 10
+        Active = 10,
+        Delete = 20
     }
 }

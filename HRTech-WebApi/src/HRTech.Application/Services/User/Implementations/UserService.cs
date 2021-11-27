@@ -96,6 +96,7 @@ namespace HRTech.Application.Services.User.Implementations
 
         public async Task<IdentityResult> Create(ApplicationUser user, string password)
         {
+            user.EmailConfirmed = true;
             var result = await _userManager.CreateAsync(user, password);
             if (!result.Succeeded)
             {

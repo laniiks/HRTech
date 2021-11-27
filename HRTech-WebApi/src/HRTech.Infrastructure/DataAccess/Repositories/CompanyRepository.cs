@@ -21,7 +21,7 @@ namespace HRTech.Infrastructure.DataAccess.Repositories
                 .OrderByDescending(d => d.CreatedDateTime)
                 .Include(x=>x.Employees)
                 .Include(x=>x.Image)
-                .Where(x=>x.State == state)
+                .Where(x=>x.State == state || x.State == CompanyState.Delete)
                 .ToArrayAsync(cancellationToken);
         }
     }

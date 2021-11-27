@@ -77,6 +77,13 @@ namespace HRTech.WebApi.Controllers.Company
             var result = await _companyService.ActiveCompany(id, isRegisterUser, CancellationToken.None);
             return Ok(result);
         }
+        
+        [HttpPut("RestoreCompany")]
+        public async Task<IActionResult> RestoreCompany(Guid id, CancellationToken cancellationToken)
+        {
+            var result = await _companyService.RestoreCompany(id, cancellationToken);
+            return Ok(result);
+        }
 
         [HttpPost("AddFileExcelUsersInCompany")]
         public async Task<IActionResult> AddFileExcelUsersInCompany(Guid id, IFormFile formFile,

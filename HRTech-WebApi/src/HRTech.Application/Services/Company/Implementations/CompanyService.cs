@@ -84,18 +84,19 @@ namespace HRTech.Application.Services.Company.Implementations
                 {
                     throw new Exception("Не найдено");
                 }
-                foreach (var evaluation in company.Evaluations)
+
+                company.State = CompanyState.Delete;
+                foreach (var employee in company.Employees)
                 {
-                    await _evaluationRepository.Delete(evaluation, cancellationToken);
+                    var user = await _applicationUserRepository.GetById(employee.Id);
+                    user.EmailConfirmed = false;
+                    await _applicationUserRepository.Update(user);
+                    await _applicationUserRepository.SaveChanges(cancellationToken);
                 }
-                foreach (var user in company.Employees)
-                {
-                    await _userManager.DeleteAsync(user);
-                }
-                await _addressRepository.Delete(company.Address, cancellationToken);
-                await _imageRepository.Delete(company.Image, cancellationToken);
-                await _excelFileUsersRepository.Delete(company.ExcelFileUsers, cancellationToken);
-                await _companyRepository.Delete(company, cancellationToken);
+
+                await _companyRepository.Update(company, cancellationToken);
+                await _companyRepository.SaveChanges(cancellationToken);
+                
                 return true;
             }
             catch (Exception e)
@@ -103,6 +104,37 @@ namespace HRTech.Application.Services.Company.Implementations
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        public async Task<bool> RestoreCompany(Guid companyId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var company = await _companyRepository.GetByIdGuid(companyId);
+                if (company == null)
+                {
+                    throw new Exception("Не найдено");
+                }
+
+                company.State = CompanyState.Active;
+                foreach (var employee in company.Employees)
+                {
+                    var user = await _applicationUserRepository.GetById(employee.Id);
+                    user.EmailConfirmed = true;
+                    await _applicationUserRepository.Update(user);
+                    await _applicationUserRepository.SaveChanges(cancellationToken);
+                }
+
+                await _companyRepository.Update(company, cancellationToken);
+                await _companyRepository.SaveChanges(cancellationToken);
+                
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }        
         }
 
         public async Task<CompanyDto> GetById(Guid id, CancellationToken cancellationToken)

@@ -41,8 +41,7 @@ namespace HRTech.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_GradeId",
                 table: "AspNetUsers",
-                column: "GradeId",
-                unique: true);
+                column: "GradeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Grades_CompanyId",
