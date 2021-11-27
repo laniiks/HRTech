@@ -62,7 +62,7 @@ namespace HRTech.Infrastructure.DataAccess.Repositories
 
         public async Task SaveChanges(CancellationToken cancellationToken)
         {
-            await _databaseContext.SaveChangesAsync(cancellationToken);
+            await _databaseContext.SaveChangesAsync();
         }
     }
 }

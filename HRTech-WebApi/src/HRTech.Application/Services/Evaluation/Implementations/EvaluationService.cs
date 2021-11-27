@@ -410,7 +410,8 @@ namespace HRTech.Application.Services.Evaluation.Implementations
                     ApplicationUserIdExpertHardSkills = evaluationDto.ApplicationUserIdExpertHardSkills,
                     ApplicationUserIdExpertEnglishSkills = evaluationDto.ApplicationUserIdExpertEnglishSkills,
                     CurrentGradeId = user.GradeId,
-                    NextGradeId = grade.Id
+                    NextGradeId = grade.Id,
+                    CompanyId = user.CompanyId
                 };
             }
             

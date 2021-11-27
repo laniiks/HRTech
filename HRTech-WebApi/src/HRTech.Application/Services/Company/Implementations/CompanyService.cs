@@ -217,9 +217,20 @@ namespace HRTech.Application.Services.Company.Implementations
                     throw new Exception("Не найдено");
                 }
 
-                await _addressRepository.Delete(company.Address, cancellationToken);
-                await _imageRepository.Delete(company.Image, cancellationToken);
-                await _excelFileUsersRepository.Delete(company.ExcelFileUsers, cancellationToken);
+                if (company.Address != null)
+                {
+                    await _addressRepository.Delete(company.Address, cancellationToken);
+                }
+
+                if (company.Image != null)
+                {
+                    await _imageRepository.Delete(company.Image, cancellationToken);
+                }
+
+                if (company.ExcelFileUsers != null)
+                {
+                    await _excelFileUsersRepository.Delete(company.ExcelFileUsers, cancellationToken);
+                }
                 await _companyRepository.Delete(company, cancellationToken);
             }
             catch (Exception e)
