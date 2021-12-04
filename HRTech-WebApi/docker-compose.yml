@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: src/HRTech.WebApi/Dockerfile
     ports:
-      - 80:80
+      - "5000:5001"
     volumes:
       - /app/StaticFiles/Images/
     network_mode: bridge
