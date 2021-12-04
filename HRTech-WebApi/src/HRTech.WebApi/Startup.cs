@@ -37,6 +37,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -70,16 +71,16 @@ namespace HRTech.WebApi
 
                 conf.UsingRabbitMq((context, c) =>
                 {
-                    // c.Host("host.docker.internal", host =>
-                    // {
-                    //     host.Username("guest");
-                    //     host.Password("guest");
-                    // });
-                    c.Host("localhost", host =>
+                    c.Host("78.24.219.180", host =>
                     {
                         host.Username("guest");
                         host.Password("guest");
                     });
+                    // c.Host("localhost", host =>
+                    // {
+                    //     host.Username("guest");
+                    //     host.Password("guest");
+                    // });
 
                     c.ReceiveEndpoint("send_email", e => e.ConfigureConsumer<SendEmailConsumer>(context));
                 });
@@ -165,6 +166,11 @@ namespace HRTech.WebApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
             UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
+            //Init migrations
+            using var scope = app.ApplicationServices.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+            db.Database.Migrate();
+            
             app.UseCors("CorsPolicy");
 
             if (env.IsDevelopment())
