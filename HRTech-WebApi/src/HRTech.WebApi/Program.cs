@@ -15,7 +15,7 @@ namespace HRTech.WebApi
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 // .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200")))
-                .WriteTo.Seq("http://localhost:5341")
+                .WriteTo.Seq("http://78.24.219.180:5341")
                 .CreateLogger();
             try
             {
