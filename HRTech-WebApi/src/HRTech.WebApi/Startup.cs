@@ -125,7 +125,15 @@ namespace HRTech.WebApi
                     }
                 });
             });
-            
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 12;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+            });
             InstallAuthentication(services);
             DatabaseContextInstaller.ConfigureDbContext(services);
 
