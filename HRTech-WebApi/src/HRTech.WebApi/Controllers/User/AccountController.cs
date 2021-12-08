@@ -145,7 +145,7 @@ namespace HRTech.WebApi.Controllers.User
         [HttpPut("UpdateGrade/{gradeId}")]
         public async Task<IActionResult> UpdateGrade(int gradeId)
         {
-            var result = _userService.UpdateGrade(await GetCurrentUser(), gradeId, CancellationToken.None);
+            var result = await _userService.UpdateGrade(await GetCurrentUser(), gradeId, CancellationToken.None);
             return Ok(result);
         }
 
