@@ -232,6 +232,7 @@ namespace HRTech.Application.Services.User.Implementations
 
         public async Task<string> AddPhotoUser(ApplicationUser user, FileDto fileDto, CancellationToken cancellationToken)
         {
+            ValidateExtension(fileDto.FileType);
             var photo = _mapper.Map<Image>(fileDto);
             photo.CompanyId = null;
             var us = await _applicationUserRepository.GetById(user.Id);
@@ -251,6 +252,15 @@ namespace HRTech.Application.Services.User.Implementations
             await _applicationUserRepository.SaveChanges(cancellationToken);
 
             return us.Id;
+        }
+
+        private void ValidateExtension(string fileDtoFileType)
+        {
+            var allowedExtensions = new List<string> {".jpg", ".jpeg", ".png"};
+            if (!allowedExtensions.Contains(fileDtoFileType))
+            {
+                throw new Exception("Файл не соответствует");
+            }
         }
 
         public async Task<ICollection<ApplicationUser>> GetAllUserInCompany(Guid companyId, CancellationToken cancellationToken)

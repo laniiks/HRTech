@@ -62,6 +62,7 @@ namespace HRTech.Application.Services.Company.Implementations
         {
             try
             {
+                ValidateExtension(companyDto.Image.FileType);
                 var company = _mapper.Map<Domain.Company>(companyDto);
                 await _companyRepository.Add(company, cancellationToken);
                 await _companyRepository.SaveChanges(cancellationToken);
@@ -74,7 +75,14 @@ namespace HRTech.Application.Services.Company.Implementations
             }
             
         }
-
+        private void ValidateExtension(string fileDtoFileType)
+        {
+            var allowedExtensions = new List<string> {".jpg", ".jpeg", ".png"};
+            if (!allowedExtensions.Contains(fileDtoFileType))
+            {
+                throw new Exception("Файл не соответствует");
+            }
+        }
         public async Task<bool> Delete(Guid id, CancellationToken cancellationToken)
         {
             try
