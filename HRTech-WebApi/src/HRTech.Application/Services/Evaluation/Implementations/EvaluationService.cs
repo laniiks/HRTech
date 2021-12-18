@@ -388,6 +388,14 @@ namespace HRTech.Application.Services.Evaluation.Implementations
         public async Task<Guid> CreateEvaluation(EvaluationDto evaluationDto, ApplicationUser user,
             CancellationToken cancellationToken)
         {
+            var evaliations = await GetAllResponseEvaluationForUser(user, cancellationToken);
+            var isUnfinishedEvaluation = evaliations.Evaluation.Any(x =>
+                x.EvaluationState == EvaluationState.New || x.EvaluationState == EvaluationState.InProgress);
+            if (isUnfinishedEvaluation)
+            {
+                throw new Exception("Не удалось создать оценку, есть незавершенная оценка");
+            }
+            
             Domain.Evaluation evaluation = null;
             if (user.CompanyId != null && user.GradeId != null)
             {
